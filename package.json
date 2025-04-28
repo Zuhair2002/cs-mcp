@@ -25,8 +25,11 @@
   "description": "",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.2",
+    "acorn-walk": "^8.3.4",
+    "acron": "^1.0.5",
     "axios": "^1.9.0",
     "dotenv": "^16.4.7",
+    "openai": "^4.96.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {

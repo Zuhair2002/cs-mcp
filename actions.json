@@ -1,0 +1,5860 @@
+{
+  "add_items_to_a_release": {
+    "name": "add_items_to_a_release",
+    "description": "This action adds items to a release.",
+    "mapper": {
+      "apiUrl": "/v3/releases/{release_id}/items",
+      "method": "POST",
+      "body": "item_data",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "release_id": "release_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "release_id",
+        "item_data"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to add the items in a release.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "release_id": {
+          "title": "Select Release",
+          "type": "string",
+          "description": "Select a release in which you want to add the items.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_releases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "release.uid"
+            ]
+          }
+        },
+        "item_data": {
+          "type": "string",
+          "title": "Release Item Data",
+          "format": "textarea",
+          "description": "Enter the data to be added in JSON format.",
+          "default": "{\n          \"items\": [\n            {\n              \"uid\": \"entry_uid\",\n              \"version\": 1,\n              \"locale\": \"en-us\",\n              \"content_type_uid\": \"demo\",\n              \"action\": \"publish\"\n            },\n            {\n              \"uid\": \"asset_uid\",\n              \"version\": 1,\n              \"locale\": \"en-us\",\n              \"content_type_uid\": \"built_io_upload\",\n              \"action\": \"publish\"\n            }\n          ]\n        }\n        ",
+          "minLength": 5
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "assign_reassign_a_branch_alias": {
+    "name": "assign_reassign_a_branch_alias",
+    "description": "This action assigns/reassigns an existing/new alias to a branch in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branch_aliases/{branch_alias_id}?force={assign_action}",
+      "method": "PUT",
+      "body": "JSON.stringify({ branch_alias: { target_branch: target_branch } })",
+      "queryParams": {
+        "force": "assign_action"
+      },
+      "params": {
+        "branch_alias_id": "branch_alias_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "assign_action",
+        "branch_alias_id",
+        "target_branch"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to assign/reassign an alias to a branch.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "assign_action": {
+          "title": "Select Action",
+          "type": "string",
+          "description": "Select an action to assign/reassign an existing/new alias to a branch.",
+          "default": "Assign",
+          "enum": [
+            "Assign",
+            "Reassign"
+          ],
+          "enumNames": [
+            "Assign",
+            "Reassign"
+          ],
+          "show": true
+        },
+        "branch_alias_id": {
+          "title": "Select Branch Alias",
+          "type": "string",
+          "description": "Select an alias to assign to a branch. If you select Assign, make sure to manually enter the new alias name before assigning it to the branch.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_aliases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "authtoken": true,
+            "edit": true
+          }
+        },
+        "target_branch": {
+          "title": "Select Target Branch",
+          "type": "string",
+          "description": "Select the target branch to which you want to assign or reassign an alias.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "authtoken": true
+          }
+        }
+      }
+    }
+  },
+  "clone_a_release": {
+    "name": "clone_a_release",
+    "description": "This action creates a duplicate of a release.",
+    "mapper": {
+      "apiUrl": "/v3/releases/{release_id}/clone",
+      "method": "POST",
+      "body": "JSON.stringify({ release: { name, description } })",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "release_id": "release_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "release_id",
+        "name"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to clone a release.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "release_id": {
+          "title": "Select Release",
+          "type": "string",
+          "description": "Select a release you want to clone.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_releases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "release.uid"
+            ]
+          }
+        },
+        "name": {
+          "title": "Release Name",
+          "type": "string",
+          "description": "Enter a suitable name for the cloned release.",
+          "default": "",
+          "minLength": 3
+        },
+        "description": {
+          "title": "Release Description",
+          "type": "string",
+          "description": "Enter a suitable description for the cloned release.",
+          "default": "",
+          "show": true
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "create_an_asset": {
+    "name": "create_an_asset",
+    "description": "This action creates a new asset in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/assets",
+      "method": "POST",
+      "body": "data",
+      "queryParams": {},
+      "params": {}
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "key",
+        "body",
+        "title"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to create a new asset.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "title": {
+          "title": "Asset Title",
+          "type": "string",
+          "description": "Specify a title for the asset.",
+          "minLength": 3
+        },
+        "key": {
+          "title": "File Name",
+          "type": "string",
+          "description": "Specify a file name for the asset.",
+          "minLength": 3
+        },
+        "body": {
+          "type": "string",
+          "title": "Input URL",
+          "description": "Specify an input URL to create an asset.",
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "url"
+            ]
+          }
+        },
+        "description": {
+          "title": "Asset Description",
+          "type": "string",
+          "description": "Specify a description for the asset.",
+          "minLength": 3
+        },
+        "folder_id": {
+          "title": "Select Folder",
+          "type": "string",
+          "description": "Select a destination folder for saving the created asset.",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_folders_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": false,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "asset.uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "create_a_branch": {
+    "name": "create_a_branch",
+    "description": "This action creates a new branch in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches",
+      "method": "POST",
+      "body": "branch_data",
+      "params": {
+        "source_branch": "source_branch",
+        "branch_uid": "branch_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "source_branch",
+        "branch_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to create a new branch. Ensure that the Branches feature is enabled for your stack.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "source_branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a source branch from your stack. This retrieves all the associated content types, entries, and assets from the source branch, then creates a new branch.",
+          "default": "{(main||main)}",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "branch_uid": {
+          "title": "Branch UID",
+          "type": "string",
+          "description": "Specify a UID to create a branch. Ensure it is  lowercase, has no space, and is maximum 15 characters.",
+          "minLength": 3
+        }
+      }
+    }
+  },
+  "create_an_entry": {
+    "name": "create_an_entry",
+    "description": "This action creates a new entry in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries",
+      "method": "POST",
+      "body": "entry_data",
+      "queryParams": {
+        "locale": "locale",
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_data"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to create an entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to create an entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_data": {
+          "title": "Entry Data",
+          "type": "string",
+          "description": "Enter the entry data in JSON format.",
+          "format": "textarea",
+          "minLength": 3,
+          "dynamicSchema": {
+            "lookup": "dynamic_schema_cs_entry_v4",
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Select a locale in which you want to create the entry.",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          }
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "localize_an_entry": {
+    "name": "localize_an_entry",
+    "description": "This action localizes an entry in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "PUT",
+      "body": "entry_data",
+      "queryParams": {
+        "locale": "locale",
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_data",
+        "entry_id",
+        "locale"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to localize the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to localize the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "description": "Select an entry that you want to localize.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Select a locale (language) in which you want to localize the entry.",
+          "placeholder": "en-us",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "locale"
+            ]
+          }
+        },
+        "entry_data": {
+          "title": "Entry Data",
+          "type": "string",
+          "description": "Enter the entry data in JSON format.",
+          "format": "textarea",
+          "minLength": 3,
+          "dynamicSchema": {
+            "lookup": "dynamic_schema_cs_entry_v4",
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "create_a_release": {
+    "name": "create_a_release",
+    "description": "This action creates a new empty release.",
+    "mapper": {
+      "apiUrl": "/v3/releases?include_branch={include_branch}",
+      "method": "POST",
+      "body": "release_data",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {}
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "name"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack where you want to create the release.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "name": {
+          "title": "Release Name",
+          "type": "string",
+          "description": "Enter a suitable name for the release.",
+          "minLength": 3
+        },
+        "description": {
+          "title": "Release Description",
+          "type": "string",
+          "description": "Enter a suitable description for the release.",
+          "show": true
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "create_a_taxonomy": {
+    "name": "create_a_taxonomy",
+    "description": "This action creates a new taxonomy in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies",
+      "method": "POST",
+      "body": "JSON.stringify({ taxonomy: { uid, name, description } })",
+      "queryParams": {},
+      "params": {}
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "uid",
+        "name"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to create a new taxonomy.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "uid": {
+          "title": "Taxonomy UID",
+          "description": "Specify a UID to create a taxonomy.",
+          "type": "string",
+          "minLength": 3
+        },
+        "name": {
+          "title": "Taxonomy Title",
+          "description": "Specify a title for the taxonomy.",
+          "type": "string",
+          "minLength": 3
+        },
+        "description": {
+          "title": "Taxonomy Description",
+          "description": "Specify a description for the taxonomy.",
+          "type": "string",
+          "format": "textarea"
+        }
+      }
+    }
+  },
+  "create_a_term": {
+    "name": "create_a_term",
+    "description": "This action creates a new term within a taxonomy.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms",
+      "method": "POST",
+      "body": "JSON.stringify({ term: { uid, name, order, parent_uid: parent_uid ? parent_uid : null } })",
+      "queryParams": {},
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid",
+        "uid",
+        "name",
+        "order"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to create a new term.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to create a term.",
+          "lookup": {
+            "id": "get_taxonomies",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          }
+        },
+        "uid": {
+          "title": "Term UID",
+          "description": "Specify a UID to create a term.",
+          "type": "string",
+          "minLength": 3
+        },
+        "name": {
+          "title": "Term Title",
+          "description": "Specify a title for the term. It must contain only alphanumeric values and underscores.",
+          "type": "string",
+          "minLength": 3
+        },
+        "order": {
+          "title": "Term Order",
+          "description": "Specify the placement order of your term.",
+          "type": "number"
+        },
+        "parent_uid": {
+          "show": true,
+          "title": "Select Parent Term",
+          "description": "Select the parent to create a term.",
+          "type": "string",
+          "lookup": {
+            "id": "get_terms",
+            "deps": [
+              "stack_api_key",
+              "taxonomy_uid"
+            ],
+            "searchable": true
+          }
+        }
+      }
+    }
+  },
+  "delete_a_branch_alias": {
+    "name": "delete_a_branch_alias",
+    "description": "This action deletes a branch alias from a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branch_aliases/{branch_alias_id}?force=true",
+      "method": "DELETE",
+      "params": {
+        "branch_alias_id": "branch_alias_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "branch_alias_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to delete the branch alias.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch_alias_id": {
+          "title": "Select Branch Alias",
+          "type": "string",
+          "description": "Select a branch alias to delete.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_aliases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "authtoken": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch_alias.alias"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "delete_an_asset": {
+    "name": "delete_an_asset",
+    "description": "This action deletes an asset in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/assets/{asset_id}",
+      "method": "DELETE",
+      "params": {
+        "asset_id": "asset_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "asset_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to delete an asset.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "asset_id": {
+          "title": "Select Asset",
+          "type": "string",
+          "description": "Select an asset to delete.",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_assets_v6",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "nested": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "data.uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "delete_a_branch": {
+    "name": "delete_a_branch",
+    "description": "This action deletes a branch in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches/${branch_id}?force=true",
+      "method": "DELETE",
+      "queryParams": {
+        "force": "force"
+      },
+      "params": {
+        "branch_id": "branch_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "branch_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to delete the branch.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch_id": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "",
+          "description": "Select a branch to delete. This deletes all the content types and assets in the branch.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          },
+          "minLength": 3,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "delete_an_entry": {
+    "name": "delete_an_entry",
+    "description": "This action deletes an entry in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "DELETE",
+      "body": "JSON.stringify(body)",
+      "queryParams": {
+        "delete_all_localized": "delete_all_localized"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to delete the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to delete the entry from the stack.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "default": "",
+          "description": "Select an entry to delete.",
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "minLength": 3,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "locales": {
+          "title": "Select Locale(s)",
+          "type": "string",
+          "description": "Select the locale(s) to delete the entry in that locale.",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "locale"
+            ]
+          },
+          "multiSelect": true
+        },
+        "delete_all_localized": {
+          "title": "Delete all the localized entries",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "delete_a_taxonomy": {
+    "name": "delete_a_taxonomy",
+    "description": "This action deletes a taxonomy, along with all its associated terms from a stack.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/${taxonomy_uid}?force=${force}",
+      "method": "DELETE",
+      "queryParams": {
+        "force": "force"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to delete a taxonomy.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to delete. This deletes all the associated terms within the selected taxonomy.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "force": {
+          "title": "Force Delete (delete the taxonomy even if it is referenced in the entries)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "delete_a_term": {
+    "name": "delete_a_term",
+    "description": "This action deletes a term within a taxonomy.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/${taxonomy_uid}/terms/${term_uid}?force=${force}",
+      "method": "DELETE",
+      "queryParams": {
+        "force": "force"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid",
+        "term_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to delete a term.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to delete a term.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "term_uid": {
+          "title": "Select Term",
+          "type": "string",
+          "description": "Select a term to delete.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_terms",
+            "deps": [
+              "stack_api_key",
+              "taxonomy_uid"
+            ],
+            "searchable": true
+          }
+        },
+        "force": {
+          "title": "Force Delete (delete the term even if it is referenced in the entries)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "deploy_a_release": {
+    "name": "deploy_a_release",
+    "description": "This action deploys a release in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/releases/{release_id}/deploy",
+      "method": "POST",
+      "body": "body",
+      "queryParams": {},
+      "params": {
+        "release_id": "release_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "release_id",
+        "environments"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to deploy the release.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "release_id": {
+          "title": "Select Release",
+          "type": "string",
+          "description": "Select a release you want to deploy.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_releases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "release.uid"
+            ]
+          }
+        },
+        "environments": {
+          "title": "Select Environment(s)",
+          "type": "string",
+          "description": "Select the environment(s) in which you want to perform the release deploy action.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "environment.uid"
+            ]
+          },
+          "multiSelect": true
+        },
+        "scheduled_at": {
+          "title": "Publish Schedule",
+          "description": "Schedule the release publish in “YYYY-MM-DD HH:MM:SS” format.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "export_a_taxonomy": {
+    "name": "export_a_taxonomy",
+    "description": "This action exports a taxonomy, along with all its associated terms in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/export",
+      "method": "GET",
+      "queryParams": {
+        "format": "format"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to export a taxonomy.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy you want to export. This exports all the associated terms within the selected taxonomy.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "format": {
+          "title": "Select Format",
+          "description": "Select the format in which you want to export the taxonomy.",
+          "type": "string",
+          "enum": [
+            "json",
+            "csv"
+          ],
+          "enumNames": [
+            "JSON",
+            "CSV"
+          ],
+          "default": "json"
+        }
+      }
+    }
+  },
+  "get_all_languages": {
+    "name": "get_all_languages",
+    "description": "This action fetches the details of all the languages created in a stack for localization.",
+    "mapper": {
+      "apiUrl": "/v3/locales",
+      "method": "GET",
+      "queryParams": {
+        "include_count": "include_count",
+        "include_branch": "include_branch",
+        "limit": "limit",
+        "skip": "skip"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the languages for localization.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "limit": {
+          "title": "Language Limit",
+          "type": "string",
+          "description": "Specify the number of languages to retrieve from the stack. For example, if you set the limit to 10, then the first 10 languages will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Language (Pagination)",
+          "type": "string",
+          "description": "Specify the number of languages to skip. For example, if you set the skip value to 3, the first three languages will be skipped and the results will start with the fourth item."
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "include_count": {
+          "title": "Include count (total number of languages)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_branch": {
+          "title": "Include branch details",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_branch_aliases": {
+    "name": "get_all_branch_aliases",
+    "description": " This action fetches the details of all the branch aliases from a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branch_aliases",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to retrieve the details of all the branch aliases.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "limit": {
+          "title": "Branch Alias Limit",
+          "type": "string",
+          "description": "Specify the number of branch aliases to retrieve from the stack. For example, if you set the limit to 10, then 10 branch aliases will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Branch Alias (Pagination)",
+          "type": "string",
+          "description": "Specify the number of branch aliases to skip. For example, if you set the skip value to 3, the first three branch aliases will be skipped and the results will start with the fourth item."
+        }
+      }
+    }
+  },
+  "get_all_assets": {
+    "name": "get_all_assets",
+    "description": "This action fetches the details of all the assets in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/assets",
+      "method": "GET",
+      "queryParams": {
+        "environment": "environment",
+        "limit": "limit",
+        "skip": "skip",
+        "folder": "folder_id",
+        "include_count": "include_count",
+        "include_publish_details": "include_publish_details",
+        "include_metadata": "include_metadata"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the assets.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "environment": {
+          "title": "Select environment",
+          "type": "string",
+          "default": "",
+          "description": "Select an environment to fetch the asset details.",
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "limit": {
+          "title": "Asset Limit",
+          "type": "string",
+          "description": "Specify the number of assets to retrieve from the stack. For example, if you set the limit to 10, then 10 assets will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Asset (Pagination)",
+          "type": "string",
+          "description": "Specify the number of assets to skip. For example, if you set the skip value to 3, the first three assets will be skipped and the results will start with the fourth item."
+        },
+        "folder_id": {
+          "title": "Select Folder",
+          "type": "string",
+          "description": "Select a folder to fetch the details of all the assets in that folder.",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_folders_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": false,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "asset.uid"
+            ]
+          }
+        },
+        "include_count": {
+          "title": "Include count (total number of assets)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_publish_details": {
+          "title": "Include publish details",
+          "type": "boolean"
+        },
+        "include_metadata": {
+          "title": "Include metadata",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_branches": {
+    "name": "get_all_branches",
+    "description": "This action fetches the details of all the branches in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the branches.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "limit": {
+          "title": "Branch Limit",
+          "type": "string",
+          "description": "Specify the number of branches to retrieve from the stack. For example, if you set the limit to 10, then the first 10 branches will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Branch (Pagination)",
+          "type": "string",
+          "description": "Specify the number of branches to skip. For example, if you set the skip value to 3, the first three branches will be skipped and the results will start with the fourth item."
+        }
+      }
+    }
+  },
+  "get_all_entries": {
+    "name": "get_all_entries",
+    "description": "This action fetches the details of all the entries in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_metadata": "include_metadata",
+        "include_workflow": "include_workflow",
+        "include_publish_details": "include_publish_details",
+        "include_branch": "include_branch",
+        "version": "version",
+        "locale": "locale",
+        "query": "query",
+        "include[]": "include"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to retrieve details of all the entries in the stack.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Configure this option to fetch entries of a particular content type.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "limit": {
+          "title": "Entry Limit",
+          "type": "string",
+          "description": "Specify the number of entries to retrieve from the stack. For example, if you set the limit to 10, then 10 entries will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Entry (Pagination)",
+          "type": "string",
+          "description": "Specify the number of entries to skip. For example, if you set the skip value to 3, the first three entries will be skipped and the results will start with the fourth item."
+        },
+        "version": {
+          "title": "Entry Version",
+          "type": "string",
+          "description": "Specify the version to fetch the entries saved in that version."
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Specify the locale to fetch the localized entries.",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "likeliest_values": {
+              "type": "key",
+              "value": [
+                "locale"
+              ]
+            }
+          }
+        },
+        "query": {
+          "type": "array",
+          "title": "Customized Data (query)",
+          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification.",
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "title": "Key",
+                "type": "string",
+                "minLength": 2,
+                "lookup": {
+                  "id": "get_single_content_type_v4",
+                  "deps": [
+                    "stack_api_key",
+                    "content_type_name"
+                  ],
+                  "optional_deps": [
+                    "branch"
+                  ],
+                  "edit": true
+                }
+              },
+              "condition": {
+                "title": "Operator",
+                "type": "string",
+                "minLength": 1,
+                "enum": [
+                  "Custom",
+                  "Equals",
+                  "Not equals",
+                  "Array equal",
+                  "Array not equal",
+                  "Reference search equal",
+                  "Reference search not equal",
+                  "Search by regex",
+                  "And",
+                  "Less than",
+                  "Less than or equals",
+                  "Greater than",
+                  "Greater than or equals",
+                  "Equals (date)",
+                  "Not equals (date)",
+                  "Less than (date)",
+                  "Less than or equals (date)",
+                  "Greater than (date)",
+                  "Greater than or equals (date)"
+                ]
+              },
+              "value": {
+                "title": "Value",
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "include": {
+          "type": "array",
+          "title": "Reference",
+          "description": "Enter the value of the referenced entries within your entry data",
+          "items": {
+            "type": "object",
+            "required": [
+              "include"
+            ],
+            "properties": {
+              "include": {
+                "title": "Value",
+                "type": "string",
+                "minLength": 1,
+                "lookup": {
+                  "id": "get_references_v4",
+                  "deps": [
+                    "stack_api_key",
+                    "content_type_name"
+                  ],
+                  "optional_deps": [
+                    "branch"
+                  ],
+                  "edit": true
+                }
+              }
+            }
+          },
+          "priorityOrder": 1
+        },
+        "include_count": {
+          "title": "Include count (total number of entries)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_metadata": {
+          "title": "Include metadata",
+          "type": "boolean",
+          "default": false
+        },
+        "include_workflow": {
+          "title": "Include workflow",
+          "type": "boolean"
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        },
+        "include_publish_details": {
+          "title": "Include publish details",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "get_all_global_fields": {
+    "name": "get_all_global_fields",
+    "description": "This action fetches the details of all the global fields in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/global_fields",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {}
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the global fields.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "include_branch": {
+          "title": "Include branch details",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_items_in_a_release": {
+    "name": "get_all_items_in_a_release",
+    "description": "This action fetches the details of all the items in a release.",
+    "mapper": {
+      "apiUrl": "/v3/releases/{release_id}/items",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "release_id": "release_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "release_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to retrieve details of all the items in the release.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "release_id": {
+          "title": "Select Release",
+          "type": "string",
+          "description": "Select a release from which you want to fetch the item details.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_releases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "release.uid"
+            ]
+          }
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_releases": {
+    "name": "get_all_releases",
+    "description": "This action gets the details of all the releases in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/releases",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_items_count": "include_items_count",
+        "include_branch": "include_branch"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to retrieve details of all the releases present in the stack.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "limit": {
+          "title": "Limit Release",
+          "type": "string",
+          "description": "Specify the number of releases to retrieve from the stack. For example, if you set the limit to 10, then 10 releases will be fetched."
+        },
+        "skip": {
+          "title": "Skip Release (Pagination)",
+          "type": "string",
+          "description": "Specify the number of releases to skip. For example, if you set the skip value to 3, the first three releases will be skipped."
+        },
+        "include_count": {
+          "title": "Include count (total number of releases)",
+          "type": "boolean",
+          "default": true
+        },
+        "include_items_count": {
+          "title": "Include count of release items",
+          "type": "boolean",
+          "default": true
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_taxonomies": {
+    "name": "get_all_taxonomies",
+    "description": "This action fetches the details of all the taxonomies in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_terms_count": "include_terms_count",
+        "include_referenced_terms_count": "include_referenced_terms_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "deleted": "deleted",
+        "typeahead": "typeahead",
+        "query": "query"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the taxonomies.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "limit": {
+          "title": "Taxonomy Limit",
+          "type": "string",
+          "description": "Specify the number of taxonomies to retrieve from the stack. For example, if you set the limit to 10, then the first 10 taxonomies will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Taxonomy (Pagination)",
+          "type": "string",
+          "description": "Specify the number of taxonomies to skip. For example, if you set the skip value to 3, the first three taxonomies will be skipped and the results will start with the fourth item."
+        },
+        "typeahead": {
+          "title": "Search Taxonomy",
+          "type": "string",
+          "description": "Specify a UID or name to search the taxonomies."
+        },
+        "query": {
+          "title": "Select Taxonomies",
+          "type": "string",
+          "description": "Select the taxonomies to fetch their details.",
+          "multiSelect": true,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "include_count": {
+          "title": "Include count (total number of taxonomies)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_terms_count": {
+          "title": "Include term count (total number of terms in the selected taxonomies)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_terms_count": {
+          "title": "Include referenced term count (total number of terms referenced in the entries)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "title": "Include referenced entries count (total number of entries which contain references to the terms of all the taxonomies)",
+          "type": "boolean",
+          "default": false
+        },
+        "deleted": {
+          "title": "Get deleted taxonomies (include count displays the total number of deleted taxonomies)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_terms": {
+    "name": "get_all_terms",
+    "description": "This action fetches the details of all the terms within a taxonomy.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_children_count": "include_children_count",
+        "include_referenced_terms_count": "include_referenced_terms_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "deleted": "deleted",
+        "include_order": "include_order",
+        "depth": "depth",
+        "typeahead": "typeahead",
+        "query": "query"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the terms.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of all the terms.",
+          "lookup": {
+            "id": "get_taxonomies",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          }
+        },
+        "limit": {
+          "title": "Term Limit",
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Term (Pagination)",
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "typeahead": {
+          "title": "Search Term(s)",
+          "type": "string",
+          "description": "Specify a UID or name to search the term(s)."
+        },
+        "query": {
+          "title": "Select Terms",
+          "type": "string",
+          "description": "Select the terms to fetch their details.",
+          "multiSelect": true,
+          "lookup": {
+            "id": "get_terms",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "taxonomy_uid"
+            ]
+          }
+        },
+        "depth": {
+          "title": "Term Hierarchy",
+          "type": "number",
+          "description": "Specify the depth to fetch the terms from the root level. By default, the terms are fetched from the root."
+        },
+        "include_count": {
+          "title": "Include count (total number of terms)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "title": "Include child count (total number of child terms of a parent term)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "title": "Include referenced entries count (total number of entries which contain references to the terms of all the taxonomies)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_order": {
+          "title": "Display the order of the term(s) according to their placement within the taxonomy.",
+          "type": "boolean",
+          "default": false
+        },
+        "deleted": {
+          "title": "Get deleted terms (include count displays the total number of deleted terms)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_terms_across_all_taxonomies": {
+    "name": "get_all_terms_across_all_taxonomies",
+    "description": "This action fetches the details of all the terms across all the taxonomies in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/$all/terms",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_children_count": "include_children_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "typeahead": "typeahead"
+      },
+      "params": {}
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "typeahead"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the terms across all the taxonomies in a stack.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "typeahead": {
+          "title": "Search Term(s)",
+          "type": "string",
+          "description": "Specify a UID or name to search the term(s)."
+        },
+        "limit": {
+          "title": "Term Limit",
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Term (Pagination)",
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "include_count": {
+          "title": "Include count (total number of terms)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "title": "Include child count (total number of child terms in a parent term)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "title": "Include referenced entries count (total number of entries which contain references to the terms of all the taxonomies)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_variants_of_an_entry": {
+    "name": "get_all_variants_of_an_entry",
+    "description": "This action fetches the details of all the variants of a specific entry for the selected content type.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_uid/variants",
+      "method": "GET",
+      "queryParams": {},
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_uid": "entry_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the variants of an entry.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to fetch the details of all the variants of an entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_uid": {
+          "title": "Select Entry",
+          "type": "string",
+          "default": "",
+          "description": "Select an entry to fetch the details of its variants.",
+          "lookup": {
+            "id": "get_entries_v5",
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "searchable": true
+          },
+          "minLength": 3,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "get_all_ancestors_of_a_term": {
+    "name": "get_all_ancestors_of_a_term",
+    "description": "This action fetches the details of all the ancestors of a term.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/${taxonomy_uid}/terms/${term_uid}/ancestors",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "include_order": "include_order"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid",
+        "term_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the ancestors of a term.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of all the terms.",
+          "lookup": {
+            "id": "get_taxonomies",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          }
+        },
+        "term_uid": {
+          "title": "Select Term",
+          "type": "string",
+          "description": "Select a term to fetch its ancestors.",
+          "lookup": {
+            "id": "get_terms",
+            "deps": [
+              "stack_api_key",
+              "taxonomy_uid"
+            ],
+            "searchable": true
+          }
+        },
+        "limit": {
+          "title": "Term Limit",
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Term (Pagination)",
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "include_count": {
+          "title": "Include count (total number of terms)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "title": "Include child count (total number of child terms of a parent term)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "title": "Include referenced entries count (total number of entries which contain references to the terms of all the taxonomies)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_asset": {
+    "name": "get_a_single_asset",
+    "description": "This action fetches the details of a single asset in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/assets/{asset_id}",
+      "method": "GET",
+      "queryParams": {
+        "version": "version",
+        "environment": "environment"
+      },
+      "params": {
+        "asset_id": "asset_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "asset_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single asset.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true
+        },
+        "asset_id": {
+          "title": "Select Asset",
+          "type": "string",
+          "description": "Select an asset to fetch its details.",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_assets_v6",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "nested": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "data.uid"
+            ]
+          }
+        },
+        "environment": {
+          "title": "Select Environment",
+          "type": "string",
+          "description": "Select an environment to fetch the asset details.",
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true
+        },
+        "version": {
+          "title": "Version",
+          "type": "string",
+          "description": "Enter the asset version to fetch its details.",
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "data._version"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "get_asset_reference": {
+    "name": "get_asset_reference",
+    "description": "This action fetches the details of all entries in which the selected asset is referenced",
+    "mapper": {
+      "apiUrl": "/v3/assets/{asset_id}/references",
+      "method": "GET",
+      "queryParams": {},
+      "params": {
+        "asset_id": "asset_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "asset_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all entries in which the selected asset is referenced.",
+          "default": "",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "asset_id": {
+          "title": "Select Asset",
+          "type": "string",
+          "description": "Select an asset to view all entries where it is referenced.",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_assets_v6",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "nested": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "get_a_single_branch": {
+    "name": "get_a_single_branch",
+    "description": "This action fetches the details of a single branch in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches/{Branch_id}",
+      "method": "GET",
+      "queryParams": {},
+      "params": {
+        "Branch_id": "Branch_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "Branch_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single branch.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "Branch_id": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "",
+          "description": "Select a branch to fetch its details.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          },
+          "minLength": 3,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "Branch.uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "get_all_content_types": {
+    "name": "get_all_content_types",
+    "description": "This action fetches the details of all the content types in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_branch": "include_branch",
+        "include_global_field_schema": "include_global_field_schema",
+        "query": "query"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to retrieve the details of all the content types in the stack.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "query": {
+          "type": "array",
+          "title": "Customized Data (query)",
+          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification.",
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "title": "Key",
+                "type": "string",
+                "minLength": 2
+              },
+              "value": {
+                "title": "Value",
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "limit": {
+          "title": "Content Type Limit",
+          "type": "string",
+          "description": "Specify the number of content types to fetch from the stack. For example, if you set the limit to 10, then 10 content types will be fetched."
+        },
+        "skip": {
+          "title": "Skip Content Type (Pagination)",
+          "type": "string",
+          "description": "Specify the number of content types to skip. For example, if you set the skip value to 3, the first three content types will be skipped."
+        },
+        "include_count": {
+          "title": "Include count (total number of content types)",
+          "type": "boolean",
+          "default": true
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean",
+          "default": true
+        },
+        "include_global_field_schema": {
+          "title": "Include global field schema",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_descendants_of_a_term": {
+    "name": "get_all_descendants_of_a_term",
+    "description": "This action fetches the details of all the descendants of a term.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/${taxonomy_uid}/terms/${term_uid}/descendants",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_children_count": "include_children_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "include_order": "include_order",
+        "depth": "depth"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid",
+        "term_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the descendants of a term.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of all the terms.",
+          "lookup": {
+            "id": "get_taxonomies",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          }
+        },
+        "term_uid": {
+          "title": "Select Term",
+          "type": "string",
+          "description": "Select a term to fetch its descendants.",
+          "lookup": {
+            "id": "get_terms",
+            "deps": [
+              "stack_api_key",
+              "taxonomy_uid"
+            ],
+            "searchable": true
+          }
+        },
+        "limit": {
+          "title": "Term Limit",
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip Term (Pagination)",
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "depth": {
+          "title": "Term Hierarchy",
+          "type": "number",
+          "description": "Specify the depth to fetch the descendants of a term."
+        },
+        "include_count": {
+          "title": "Include count (total number of terms)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "title": "Include child count (total number of child terms of a parent term)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "title": "Include referenced entries count (total number of entries which contain references to the terms of all the taxonomies)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_order": {
+          "title": "Display the order of the term(s) according to their placement within the taxonomy",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_single_entry": {
+    "name": "get_single_entry",
+    "description": "This action gets details of a single entry.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "GET",
+      "queryParams": {
+        "version": "version",
+        "locale": "locale",
+        "include_workflow": "include_workflow",
+        "include_publish_details": "include_publish_details",
+        "include_branch": "include_branch",
+        "include[]": "include"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to fetch the entry details.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "default": "",
+          "description": "Select an entry to fetch its details.",
+          "lookup": {
+            "id": "get_entries_v5",
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "minLength": 3,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "version": {
+          "title": "Version",
+          "type": "string",
+          "description": "Select the entry version."
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Select a locale to fetch the entry details in that locale.",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          }
+        },
+        "include": {
+          "type": "array",
+          "title": "Reference",
+          "items": {
+            "type": "object",
+            "required": [
+              "include"
+            ],
+            "properties": {
+              "include": {
+                "title": "Value",
+                "type": "string",
+                "minLength": 1,
+                "lookup": {
+                  "id": "get_references_v4",
+                  "deps": [
+                    "stack_api_key",
+                    "content_type_name"
+                  ],
+                  "optional_deps": [
+                    "branch"
+                  ],
+                  "edit": true
+                }
+              }
+            }
+          },
+          "priorityOrder": 1
+        },
+        "include_workflow": {
+          "title": "Include Workflow",
+          "type": "boolean"
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        },
+        "include_publish_details": {
+          "title": "Include Publish Details",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "get_a_single_merge_job": {
+    "name": "get_a_single_merge_job",
+    "description": "This action fetches the details of a single merge job in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches_queue/{merge_job_uid}",
+      "method": "GET",
+      "queryParams": {},
+      "params": {
+        "merge_job_uid": "merge_job_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "merge_job_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single merge job.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "merge_job_uid": {
+          "title": "Select Merge Job",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "description": "Select a merge job to fetch its details.",
+          "lookup": {
+            "id": "get_merge_jobs_v1",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              ".uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "get_a_single_release": {
+    "name": "get_a_single_release",
+    "description": "This action gets the details of a single release.",
+    "mapper": {
+      "apiUrl": "/v3/releases/{release_id}",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "release_id": "release_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "release_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to retrieve details of a single release in  the stack.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "release_id": {
+          "title": "Select a Release",
+          "type": "string",
+          "description": "Select a release to fetch its details.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_releases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "release.uid"
+            ]
+          }
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_branch_alias": {
+    "name": "get_a_single_branch_alias",
+    "description": "This action fetches the details of a single branch alias from a stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branch_aliases/${branch_alias_id}",
+      "method": "GET",
+      "queryParams": {},
+      "params": {
+        "branch_alias_id": "branch_alias_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "branch_alias_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single branch alias.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch_alias_id": {
+          "title": "Select Branch Alias",
+          "type": "string",
+          "description": "Select a branch alias to fetch its details.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_aliases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "authtoken": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch_alias.alias"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "get_a_single_content_type": {
+    "name": "get_a_single_content_type",
+    "description": "This action fetches the details of a specific content type in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch",
+        "include_global_field_schema": "include_global_field_schema"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to retrieve the details of a specific content type.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to fetch its details.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "include_global_field_schema": {
+          "title": "Include global field schema",
+          "type": "boolean",
+          "default": true
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_single_entry_variant": {
+    "name": "get_single_entry_variant",
+    "description": "Fetches a single variant of an entry with detailed options.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "GET",
+      "queryParams": {
+        "locale": "locale",
+        "include_access_requests": "include_access_requests",
+        "include_dimension": "include_dimension",
+        "include_publish_details": "include_publish_details",
+        "include_rules": "include_rules",
+        "include_workflow": "include_workflow",
+        "include_embedded_items": "include_embedded_items",
+        "include_metadata": "include_metadata",
+        "include_applied_variants": "include_applied_variants"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_id",
+        "locale",
+        "variant_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "API key for the selected stack.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "default": "",
+          "description": "Select an entry",
+          "lookup": {
+            "id": "get_entries_v5",
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "minLength": 3,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "variant_group_uid": {
+          "title": "Select Variant Group",
+          "type": "string",
+          "description": "Select the Variant Group from which you want to fetch the details of a single variant entry.",
+          "show": true,
+          "lookup": {
+            "id": "get_variant_group_v5",
+            "authtoken": true,
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "variant_uid": {
+          "title": "Select Variant",
+          "type": "string",
+          "description": "Select a variant to fetch its details.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_variants_v5",
+            "authtoken": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "variant_group_uid"
+            ]
+          }
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Select a locale",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "include_access_requests": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_dimension": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_publish_details": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_rules": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_workflow": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_embedded_items": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_applied_variants": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_global_field": {
+    "name": "get_a_single_global_field",
+    "description": "This action fetches the details of a specific global field in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/global_fields/global_field_uid",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "global_field_uid": "global_field_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "global_field_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single global field.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "global_field_uid": {
+          "title": "Select Global Field",
+          "type": "string",
+          "description": "Select a global field to fetch its details.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_global_fields_v4",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "include_branch": {
+          "title": "Include branch details",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_variant": {
+    "name": "get_a_single_variant",
+    "description": "This action fetches the details of a single variant in a Variant Group.",
+    "mapper": {
+      "apiUrl": "/v3/variant_groups/variant_group_uid/variants/variant_id",
+      "method": "GET",
+      "params": {
+        "variant_group_uid": "variant_group_uid",
+        "variant_id": "variant_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "variant_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single variant.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "variant_group_uid": {
+          "title": "Select Variant Group",
+          "type": "string",
+          "description": "Select the Variant Group from which you want to fetch the details of a single variant.",
+          "show": true,
+          "lookup": {
+            "id": "get_variant_group_v5",
+            "authtoken": true,
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "variant_id": {
+          "title": "Select Variant",
+          "type": "string",
+          "description": "Select a variant to fetch its details.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_variants_v5",
+            "authtoken": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "variant_group_uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "get_a_single_taxonomy": {
+    "name": "get_a_single_taxonomy",
+    "description": "This action fetches the details of a single taxonomy.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid",
+      "method": "GET",
+      "queryParams": {
+        "include_terms_count": "include_terms_count",
+        "include_referenced_terms_count": "include_referenced_terms_count",
+        "include_referenced_entries_count": "include_referenced_entries_count"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single taxonomy.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to fetch its details.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "include_terms_count": {
+          "show": false,
+          "title": "Include term count (total number of terms in the selected  taxonomy)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_terms_count": {
+          "show": false,
+          "title": "Include referenced term count (total number of terms referenced in the entries)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "show": false,
+          "title": "Include referenced entries count (total number of entries which contain references to the terms of a taxonomy)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_term": {
+    "name": "get_a_single_term",
+    "description": "This action fetches the details of a single term.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms/term_uid",
+      "method": "GET",
+      "queryParams": {
+        "include_children_count": "include_children_count",
+        "include_referenced_entries_count": "include_referenced_entries_count"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid",
+        "term_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of a single term.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of a single term.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "term_uid": {
+          "title": "Select Term",
+          "type": "string",
+          "description": "Select a term to fetch its details.",
+          "lookup": {
+            "id": "get_terms",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "taxonomy_uid"
+            ]
+          }
+        },
+        "include_children_count": {
+          "title": "Include child count (total number of child terms in a parent term)",
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "show": false,
+          "title": "Include referenced entries count (total number of entries which contain references to the terms of all the taxonomies)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_user_information": {
+    "name": "get_user_information",
+    "description": "This action gets the details of a user.",
+    "mapper": {
+      "apiUrl": "/v3/users",
+      "method": "GET",
+      "queryParams": {
+        "user_ids": "user_ids"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "user_ids"
+      ],
+      "properties": {
+        "user_ids": {
+          "title": "User ID",
+          "type": "string",
+          "description": "Enter a user ID to fetch the details.",
+          "default": "",
+          "minLength": 3,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "created_by",
+              "updated_by"
+            ]
+          },
+          "multiSelect": true
+        }
+      }
+    }
+  },
+  "get_all_variants_of_a_content_type": {
+    "name": "get_all_variants_of_a_content_type",
+    "description": "This action fetches the details of all the variants associated with a specific content type.",
+    "mapper": {
+      "apiUrl": "/v3/variant_groups/?content_type=content_type_uid&include_variant_info=true",
+      "method": "GET",
+      "queryParams": {
+        "content_type": "content_type_uid",
+        "include_variant_info": "include_variant_info"
+      },
+      "params": {
+        "content_type_uid": "content_type_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to fetch the details of all the variants of a content type.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "content_type_uid": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to fetch all the variants associated with it.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "import_a_taxonomy": {
+    "name": "import_a_taxonomy",
+    "description": "This action imports a taxonomy, along with all its associated terms in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/import",
+      "method": "POST",
+      "body": "body",
+      "queryParams": {},
+      "params": {}
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "format",
+        "body"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to import a taxonomy. This imports all the associated terms within the selected taxonomy.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "format": {
+          "title": "Select Format",
+          "type": "string",
+          "enum": [
+            "json",
+            "csv"
+          ],
+          "enumNames": [
+            "JSON",
+            "CSV"
+          ],
+          "default": "json",
+          "description": "Select the format in which you want to import the taxonomy."
+        },
+        "body": {
+          "title": "Taxonomy Data",
+          "description": "Specify the data in JSON or CSV format to import.",
+          "type": "string",
+          "format": "textarea",
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              ".csv"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "merge_branch": {
+    "name": "merge_branch",
+    "description": "This action merges the content types and global fields from compare (source) branch into base (target) branch.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches_merge?base_branch={base_branch}&compare_branch={compare_branch}&default_merge_strategy={merge_strategy}&merge_comment={merge_comment}",
+      "method": "POST",
+      "body": "merging_data",
+      "queryParams": {
+        "base_branch": "base_branch",
+        "compare_branch": "compare_branch",
+        "default_merge_strategy": "merge_strategy",
+        "merge_comment": "merge_comment"
+      },
+      "params": {}
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "base_branch",
+        "compare_branch",
+        "merge_strategy",
+        "merge_comment"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to merge the content types and global fields from compare (source)  into base (target) branch.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "compare_branch": {
+          "title": "Select Compare Branch",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "description": "Select a compare (source) branch to copy the content types and global fields.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "base_branch": {
+          "title": "Select Base Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "minLength": 3,
+          "description": "Select a base (target) branch in which you want to merge the data from the compare branch.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "searchable": true
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "merge_strategy": {
+          "type": "string",
+          "title": "Select Merge Strategy",
+          "description": "Select a merge strategy to merge the branch.",
+          "default": "ignore",
+          "enum": [
+            "merge_prefer_base",
+            "merge_prefer_compare",
+            "overwrite_with_compare",
+            "merge_new_only",
+            "merge_modified_only_prefer_base",
+            "merge_modified_only_prefer_compare",
+            "ignore"
+          ],
+          "enumNames": [
+            "Merge Prefer Base",
+            "Merge Prefer Compare",
+            "Overwrite With Compare",
+            "Merge New Only",
+            "Merge Modified Only Prefer Base",
+            "Merge Modified Only Prefer Compare",
+            "Ignore"
+          ]
+        },
+        "merge_comment": {
+          "title": "Merge Comment",
+          "type": "string",
+          "format": "textarea",
+          "description": "Specify additional descriptive comment(s) for the merge action. The specified comments can be fetched via the ‘Get a Single Merge Job’ action for future reference.",
+          "minLength": 3
+        }
+      }
+    }
+  },
+  "publish_an_asset": {
+    "name": "publish_an_asset",
+    "description": "This action publishes an asset in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/assets/{asset}/publish",
+      "method": "POST",
+      "body": "body",
+      "queryParams": {},
+      "params": {
+        "asset": "asset"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "asset",
+        "environments"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "description": "Select a stack to publish the asset.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "asset": {
+          "title": "Select Asset",
+          "description": "Select an asset to publish.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_assets_v6",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "nested": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "asset.uid"
+            ]
+          }
+        },
+        "environments": {
+          "title": "Select Environment(s)",
+          "description": "Select the environment(s) in which you want to publish the asset.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "environment.uid"
+            ]
+          },
+          "multiSelect": true
+        },
+        "locales": {
+          "title": "Select Locale(s)",
+          "description": "Select the locale(s) in which you want to publish the asset.",
+          "type": "string",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "multiSelect": true
+        },
+        "scheduled_at": {
+          "title": "Publish Schedule",
+          "description": "Schedule the asset publish in ‘YYYY-MM-DD HH:MM:SS’ format.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "publish_an_entry": {
+    "name": "publish_an_entry",
+    "description": "This action publishes a single entry in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry/publish",
+      "method": "POST",
+      "body": "body",
+      "queryParams": {
+        "publish_with_reference": "publish_with_reference",
+        "x-bulk-action": "x-bulk-action"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry": "entry"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry",
+        "environments",
+        "locales"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "description": "Select a stack to publish the entry.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "description": "Select a content type to publish the entry.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry": {
+          "title": "Select Entry",
+          "description": "Select an entry to publish.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "locales": {
+          "title": "Select Locale(s)",
+          "description": "Select the locale(s) in which you want to publish the entry.",
+          "type": "string",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "multiSelect": true
+        },
+        "environments": {
+          "title": "Select Environment(s)",
+          "description": "Select the environment(s) in which you want to publish the entry.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "environment.uid"
+            ]
+          },
+          "multiSelect": true
+        },
+        "publish_with_reference": {
+          "title": "Nested Reference Publishing",
+          "type": "boolean",
+          "default": true
+        },
+        "scheduled_at": {
+          "title": "Publish Schedule",
+          "description": "Schedule the entry publish in ‘YYYY-MM-DD HH:MM:SS’ format.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "get_publish_queue": {
+    "name": "get_publish_queue",
+    "description": "This action fetches the details of all the published and unpublished entries in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/publish-queue",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "query": "query"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "description": "Select a stack to retrieve details of all the published and unpublished entries in the stack.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "query": {
+          "type": "string",
+          "title": "Customized Data (query)",
+          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification.",
+          "format": "textarea"
+        },
+        "limit": {
+          "type": "string",
+          "title": "Entry Limit",
+          "description": "Specify the number of entries to retrieve from the stack. For example, if you set the limit to 10, then 10 entries will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "title": "Skip (Pagination)",
+          "type": "string",
+          "description": "Specify the number of entries to skip. For example, if you set the skip value to 3, the first three entries will be skipped and the results will start with the fourth item."
+        },
+        "include_count": {
+          "title": "Include count (total number of entries)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "publish_variant_s_of_an_entry": {
+    "name": "publish_variant_s_of_an_entry",
+    "description": "This action publishes the variants of an entry.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry/publish",
+      "method": "POST",
+      "body": "body",
+      "queryParams": {},
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry": "entry"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry",
+        "environments",
+        "locales",
+        "variant_ids"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "description": "Select a stack to publish the entry’s variant.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "description": "Select a content type to publish the entry’s variant.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry": {
+          "title": "Select Entry",
+          "description": "Select an entry to publish its variant.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "variant_group_uid": {
+          "title": "Select Variant Group",
+          "type": "string",
+          "description": "Select the Variant Group to publish the variant.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_variant_group_v5",
+            "authtoken": true,
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "variant_ids": {
+          "title": "Select Variant(s)",
+          "type": "string",
+          "description": "Select the variant(s) to publish its content. You can select multiple variants.",
+          "minLength": 3,
+          "multiSelect": true,
+          "lookup": {
+            "id": "get_variants_v5",
+            "authtoken": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "variant_group_uid"
+            ]
+          }
+        },
+        "locales": {
+          "title": "Select Locale(s)",
+          "description": "Select the locale(s) in which you want to publish the entry’s variant. You can select multiple locales.",
+          "type": "string",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "multiSelect": true
+        },
+        "environments": {
+          "title": "Select Environment(s)",
+          "description": "Select the environment(s) in which you want to publish the entry’s variant. You can select multiple environments.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "environment.uid"
+            ]
+          },
+          "multiSelect": true
+        },
+        "scheduled_at": {
+          "title": "Publish Schedule",
+          "description": "Schedule the publish schedule in ‘YYYY-MM-DD HH:MM:SS’ format.",
+          "type": "string"
+        },
+        "publish_with_reference": {
+          "title": "Nested reference publishing",
+          "type": "boolean",
+          "default": true
+        },
+        "publish_latest_base": {
+          "title": "Publish latest base",
+          "type": "boolean",
+          "default": false
+        },
+        "publish_latest_base_conditionally": {
+          "title": "Publish latest base conditionally",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "delete_items_from_a_release": {
+    "name": "delete_items_from_a_release",
+    "description": "This action removes items from a release.",
+    "mapper": {
+      "apiUrl": "/v3/releases/{release_id}/items?all=false&include_branch={include_branch}",
+      "method": "DELETE",
+      "body": "item_data",
+      "queryParams": {
+        "include_branch": "include_branch",
+        "all": "all"
+      },
+      "params": {
+        "release_id": "release_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "release_id",
+        "item_data"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to remove an item from the release.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "{(main||main)}",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "release_id": {
+          "title": "Select Release",
+          "type": "string",
+          "description": "Select a release from which you want to remove an item.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_releases_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "release.uid"
+            ]
+          }
+        },
+        "item_data": {
+          "type": "string",
+          "title": "Release Item Data",
+          "format": "textarea",
+          "description": "Enter the item data in JSON format.",
+          "default": "{\n          \"items\": [\n            {\n              \"uid\": \"entry_uid\",\n              \"version\": 1,\n              \"locale\": \"en-us\",\n              \"content_type_uid\": \"demo\",\n              \"action\": \"publish\"\n            },\n            {\n              \"uid\": \"asset_uid\",\n              \"version\": 1,\n              \"locale\": \"en-us\",\n              \"content_type_uid\": \"built_io_upload\",\n              \"action\": \"publish\"\n            }\n          ]\n        }",
+          "minLength": 5
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "set_entry_workflow": {
+    "name": "set_entry_workflow",
+    "description": "This action sets an entry workflow in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/workflow",
+      "method": "POST",
+      "body": "workflow",
+      "queryParams": {
+        "locale": "locale"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_id",
+        "workflow_stage_uid"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to set the workflow stage of an entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "show": true,
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to set the workflow stage of an entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "description": "Select an entry for which you want to set the workflow stage.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "workflow_stage_uid": {
+          "title": "Select Workflow Stage",
+          "type": "string",
+          "description": "Select a workflow stage that needs to be set for the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_single_workflow_stage_v4",
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "assigned_to": {
+          "type": "string",
+          "title": "Assignee Name(s)",
+          "description": "Select the assignee name(s) to let the user(s) know about the workflow update.",
+          "default": "",
+          "lookup": {
+            "id": "get_users_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "multiSelect": true
+        },
+        "assigned_by_roles": {
+          "type": "string",
+          "title": "Assignee Role(s)",
+          "description": "Select the role(s) to send a notification to all the users with the selected role.",
+          "default": "",
+          "lookup": {
+            "id": "get_all_roles_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "multiSelect": true
+        },
+        "due_date": {
+          "title": "Set Due Date",
+          "description": "Enter the due date to update the workflow in ‘YYYY/MM/DD’ format.",
+          "type": "string"
+        },
+        "notify_via_email": {
+          "title": "Notify via Email",
+          "type": "boolean",
+          "default": false,
+          "enum": [
+            true,
+            false
+          ]
+        },
+        "comments": {
+          "title": "Comment",
+          "type": "string",
+          "description": "Enter a comment for the user to acknowledge the workflow update.",
+          "format": "textarea"
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Select a locale in which you want to set the entry workflow stage.",
+          "placeholder": "en-us",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          }
+        }
+      }
+    }
+  },
+  "remove_localization": {
+    "name": "remove_localization",
+    "description": "This action reverts the entry to its original non-localized state in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/unlocalize",
+      "method": "POST",
+      "queryParams": {
+        "locale": "locale"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_id",
+        "locale"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to remove the localized version of the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to remove the localized version of the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "description": "Select an entry to restore to its original non-localized state.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Select a locale (language) to remove the entry's localization in the selected locale. The entry must be localized in the selected locale.",
+          "placeholder": "en-us",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "locale"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "unpublish_asset": {
+    "name": "unpublish_asset",
+    "description": "This action unpublishes an asset",
+    "mapper": {
+      "apiUrl": "/v3/assets/{asset}/unpublish",
+      "method": "POST",
+      "body": "body",
+      "queryParams": {},
+      "params": {
+        "asset": "asset"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "asset",
+        "environments"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "description": "Select a stack to unpublish the asset.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "asset": {
+          "title": "Select Asset",
+          "description": "Select an asset which you want to unpublish.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_assets_v6",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "nested": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "asset.uid"
+            ]
+          }
+        },
+        "environments": {
+          "title": "Select Environments",
+          "description": "Select an environment to unpublish the asset.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "multiSelect": true,
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "environment.uid"
+            ]
+          }
+        },
+        "locales": {
+          "title": "Select Locales",
+          "description": "Select the locale in which the asset should be unpublished.",
+          "type": "string",
+          "multiSelect": true,
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          }
+        },
+        "scheduled_at": {
+          "title": "Unpublish Schedule",
+          "description": "Schedule the asset unpublish in ‘YYYY-MM-DD HH:MM:SS’ format.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "unpublish_an_entry": {
+    "name": "unpublish_an_entry",
+    "description": "This action unpublishes an entry in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry/unpublish",
+      "method": "POST",
+      "body": "body",
+      "queryParams": {},
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry": "entry"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry",
+        "environments"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "description": "Select a stack to unpublish the entry.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "description": "Select a content type to unpublish the entry.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry": {
+          "title": "Select Entry",
+          "description": "Select an entry to unpublish.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "environments": {
+          "title": "Select Environment(s)",
+          "description": "Select the environment(s) from where you want to unpublish the entry.",
+          "type": "string",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_environments_v4",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "environment.uid"
+            ]
+          },
+          "multiSelect": true
+        },
+        "locales": {
+          "title": "Select Locale(s)",
+          "description": "Select the locale(s) to unpublish the entry in that locale.",
+          "type": "string",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          },
+          "multiSelect": true
+        },
+        "scheduled_at": {
+          "title": "Unpublish Schedule",
+          "description": "When left blank, the unpublish schedule is set to \"now.\" You may also enter a UTC time in \"YYYY-MM-DD HH:MM:SS\" format.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "update_an_asset": {
+    "name": "update_an_asset",
+    "description": "This action updates a single asset in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/assets/{asset_id}",
+      "method": "PUT",
+      "body": "data",
+      "queryParams": {},
+      "params": {
+        "asset_id": "asset_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "asset_id"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to update an asset.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "asset_id": {
+          "title": "Select Asset",
+          "type": "string",
+          "description": " Select an asset to update.",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_assets_v6",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "nested": true
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "data.uid"
+            ]
+          }
+        },
+        "title": {
+          "title": "Asset Title",
+          "type": "string",
+          "description": "Specify a title for the asset.",
+          "minLength": 3
+        },
+        "description": {
+          "title": "Asset Description",
+          "type": "string",
+          "description": "Specify a description for the asset.",
+          "minLength": 3
+        },
+        "key": {
+          "title": "File Name",
+          "type": "string",
+          "description": "Specify a file name for the asset.",
+          "minLength": 3
+        },
+        "body": {
+          "type": "string",
+          "title": "Input URL",
+          "description": "Specify an input URL to update an asset.",
+          "show": true
+        },
+        "folder_id": {
+          "title": "Select Folder",
+          "type": "string",
+          "description": "Select a folder to update an asset in it.",
+          "minLength": 1,
+          "lookup": {
+            "id": "get_folders_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": false,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "asset.uid"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "update_an_entry": {
+    "name": "update_an_entry",
+    "description": "This action updates an entry in a stack.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "PUT",
+      "body": "entry_data",
+      "queryParams": {
+        "locale": "locale",
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "content_type_name",
+        "entry_id",
+        "entry_data"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to update the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "branch": {
+          "title": "Select Branch",
+          "type": "string",
+          "default": "{(main||main)}",
+          "description": "Select a branch from your stack.",
+          "lookup": {
+            "id": "get_branches_v5",
+            "deps": [
+              "stack_api_key"
+            ]
+          },
+          "show": true,
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "branch.uid"
+            ]
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to update the entry.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "description": "Select an entry to update.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "entry_data": {
+          "title": "Entry Data",
+          "type": "string",
+          "format": "textarea",
+          "description": "Enter the entry data in JSON format.",
+          "minLength": 3,
+          "dynamicSchema": {
+            "lookup": "dynamic_schema_cs_entry_v4",
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "locale": {
+          "title": "Select Locale",
+          "type": "string",
+          "description": "Select a locale in which the entry should be updated.",
+          "placeholder": "en-us",
+          "lookup": {
+            "id": "get_locales_v5",
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ],
+            "searchable": true
+          }
+        },
+        "include_branch": {
+          "title": "Include branch",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "update_a_taxonomy": {
+    "name": "update_a_taxonomy",
+    "description": "This action updates the description and title of a taxonomy.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/${taxonomy_uid}",
+      "method": "PUT",
+      "body": "body",
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid",
+        "name",
+        "description"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to update an existing taxonomy.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to update.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "name": {
+          "title": "Taxonomy Title",
+          "description": "Specify a title for the taxonomy.",
+          "type": "string",
+          "minLength": 3
+        },
+        "description": {
+          "title": "Taxonomy Description",
+          "description": "Specify a description for the taxonomy.",
+          "type": "string",
+          "format": "textarea",
+          "minLength": 3
+        }
+      }
+    }
+  },
+  "update_a_term": {
+    "name": "update_a_term",
+    "description": "This action updates the title of a term.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/${taxonomy_uid}/terms/${term_uid}",
+      "method": "PUT",
+      "body": "term",
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "taxonomy_uid",
+        "term_uid",
+        "name"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to update the term.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "taxonomy_uid": {
+          "title": "Select Taxonomy",
+          "type": "string",
+          "description": "Select a taxonomy to update the term.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_taxonomies",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "term_uid": {
+          "title": "Select Term",
+          "type": "string",
+          "description": "Select a term to update.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_terms",
+            "deps": [
+              "stack_api_key",
+              "taxonomy_uid"
+            ],
+            "searchable": true
+          }
+        },
+        "name": {
+          "title": "Term Title",
+          "description": "Specify a title to update the term.",
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    }
+  },
+  "update_a_variant_of_an_entry": {
+    "name": "update_a_variant_of_an_entry",
+    "description": "This action updates the content of an entry’s variant in a Variant Group.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/variants/variant_id",
+      "method": "PUT",
+      "body": "entry_data",
+      "queryParams": {},
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id",
+        "variant_id": "variant_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "stack_api_key",
+        "variant_group_uid",
+        "variant_id",
+        "content_type_name",
+        "entry_id",
+        "entry_data",
+        "changeset"
+      ],
+      "properties": {
+        "stack_api_key": {
+          "title": "Select Stack",
+          "type": "string",
+          "description": "Select a stack to update the entry's variant.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_stack_api_keys_v5",
+            "authtoken": true
+          }
+        },
+        "content_type_name": {
+          "title": "Select Content Type",
+          "type": "string",
+          "description": "Select a content type to update the entry's variant.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_content_types_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "content_type.uid"
+            ]
+          }
+        },
+        "entry_id": {
+          "title": "Select Entry",
+          "type": "string",
+          "description": "Select an entry to update its variant.",
+          "default": "",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_entries_v5",
+            "searchable": true,
+            "deps": [
+              "stack_api_key",
+              "content_type_name"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          },
+          "likeliest_values": {
+            "type": "key",
+            "value": [
+              "entry.uid"
+            ]
+          }
+        },
+        "variant_group_uid": {
+          "title": "Select Variant Group",
+          "type": "string",
+          "description": "Select the Variant Group to update the variant.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_variant_group_v5",
+            "authtoken": true,
+            "searchable": true,
+            "deps": [
+              "stack_api_key"
+            ]
+          }
+        },
+        "variant_id": {
+          "title": "Select Variant",
+          "type": "string",
+          "description": "Select a variant to update its content.",
+          "minLength": 3,
+          "lookup": {
+            "id": "get_variants_v5",
+            "authtoken": true,
+            "deps": [
+              "stack_api_key",
+              "variant_group_uid"
+            ]
+          }
+        },
+        "entry_data": {
+          "title": "Entry Data",
+          "type": "string",
+          "format": "textarea",
+          "description": "Enter the entry data in JSON format to update the variant content.",
+          "minLength": 3,
+          "dynamicSchema": {
+            "lookup": "dynamic_schema_cs_entry_v5",
+            "deps": [
+              "stack_api_key",
+              "content_type_name",
+              "variant_id"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        },
+        "changeset": {
+          "title": "Change Set",
+          "type": "string",
+          "format": "textarea",
+          "description": "Enter the change set data in JSON format to update the variant content.",
+          "minLength": 3,
+          "dynamicSchema": {
+            "lookup": "dynamic_schema_entry_changeset",
+            "deps": [
+              "stack_api_key",
+              "content_type_name",
+              "entry_id",
+              "entry_data"
+            ],
+            "optional_deps": [
+              "branch"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
