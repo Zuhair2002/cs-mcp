@@ -1,0 +1,37 @@
+{
+  "name": "@zuhair-cs/cs-mcp",
+  "version": "0.0.4",
+  "main": "./dist/bundle.js",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "mcp-server-contentstack": "./bin/mcp-server.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node build.js && chmod +x bin/mcp-server.js",
+    "clean": "rm -rf dist",
+    "lint": "eslint src/**/*.ts",
+    "watch": "tsc --watch",
+    "dev": "nodemon --watch src -e ts --exec 'npm run build'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "axios": "^1.9.0",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "esbuild": "^0.25.3",
+    "typescript": "^5.8.3"
+  }
+}

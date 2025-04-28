@@ -1,0 +1,367 @@
+{
+  "create_an_entry": {
+    "name": "create_an_entry",
+    "description": "This tool creates a new entry in the specified Contentstack stack, targeting a defined content type and branch, with support for locale selection and structured entry data.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries",
+      "method": "POST",
+      "body": "entry_data",
+      "queryParams": {
+        "locale": "locale",
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name", "entry_data"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to create an entry.",
+          "default": ""
+        },
+        "entry_data": {
+          "type": "object",
+          "description": "The fields should be wrapped by an entry object {'entry':{...data}}"
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select a locale in which you want to create the entry."
+        },
+        "include_branch": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "delete_an_entry": {
+    "name": "delete_an_entry",
+    "description": "This tool deletes a specified entry from a Contentstack stack, targeting the provided content type and entry ID, with optional parameters for branch, locale, and deletion of all localized variants.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "DELETE",
+      "queryParams": {
+        "delete_all_localized": "delete_all_localized"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name", "entry_id"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to delete the entry from the stack.",
+          "default": ""
+        },
+        "entry_id": {
+          "type": "string",
+          "description": "Select an entry to delete.",
+          "default": ""
+        },
+        "locales": {
+          "type": "string",
+          "description": "Select the locale(s) to delete the entry in that locale."
+        },
+        "delete_all_localized": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_entries": {
+    "name": "get_all_entries",
+    "description": "This tool retrieves entry details for a specified content type within a Contentstack stack, supporting branch selection, pagination, versioning, locale filtering, advanced query parameters, and optional inclusion of metadata, workflow, branch, and publish details. Keywords: entry retrieval, content type.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_metadata": "include_metadata",
+        "version": "version",
+        "locale": "locale",
+        "include_workflow": "include_workflow",
+        "include_publish_details": "include_publish_details",
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Configure this option to fetch entries of a particular content type.",
+          "default": ""
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of entries to retrieve from the stack. For example, if you set the limit to 10, then 10 entries will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of entries to skip. For example, if you set the skip value to 3, the first three entries will be skipped and the results will start with the fourth item."
+        },
+        "version": {
+          "type": "string",
+          "description": "Specify the version to fetch the entries saved in that version."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Specify the locale to fetch the localized entries."
+        },
+        "query": {
+          "type": "array",
+          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
+        },
+        "include": {
+          "type": "array",
+          "description": "Enter the value of the referenced entries within your entry data"
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_workflow": {
+          "type": "boolean"
+        },
+        "include_branch": {
+          "type": "boolean"
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "get_a_single_entry": {
+    "name": "get_a_single_entry",
+    "description": "This tool retrieves metadata and field values for a specified entry within a given content type, supporting branch, version, and locale selection, with optional inclusion of workflow, branch, and publish details. Keywords: entry retrieval, metadata.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "GET",
+      "queryParams": {
+        "version": "version",
+        "locale": "locale",
+        "include_workflow": "include_workflow",
+        "include_publish_details": "include_publish_details",
+        "include_branch": "include_branch",
+        "include": "include[]"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name", "entry_id"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to fetch the entry details.",
+          "default": ""
+        },
+        "entry_id": {
+          "type": "string",
+          "description": "Select an entry to fetch its details.",
+          "default": ""
+        },
+        "version": {
+          "type": "string",
+          "description": "Select the entry version."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select a locale to fetch the entry details in that locale."
+        },
+        "include": {
+          "type": "array"
+        },
+        "include_workflow": {
+          "type": "boolean"
+        },
+        "include_branch": {
+          "type": "boolean"
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "update_an_entry": {
+    "name": "update_an_entry",
+    "description": "This tool updates an existing entry in a specified Contentstack stack, branch, and locale by modifying its field data according to the provided content type and entry identifier. Keywords: entry update, content type.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "PUT",
+      "body": "entry_data",
+      "queryParams": {
+        "locale": "locale",
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name", "entry_id", "entry_data"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to update the entry.",
+          "default": ""
+        },
+        "entry_id": {
+          "type": "string",
+          "description": "Select an entry to update.",
+          "default": ""
+        },
+        "entry_data": {
+          "type": "object",
+          "description": "The fields should be wrapped by an entry object {'entry':{...data}}"
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select a locale in which the entry should be updated."
+        },
+        "include_branch": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "get_all_content_types": {
+    "name": "get_all_content_types",
+    "description": "This tool retrieves the schema and metadata of a specified content type from a Contentstack stack, supporting branch selection, query filtering, pagination, and optional inclusion of global field schema and branch metadata.",
+    "mapper": {
+      "apiUrl": "/v3/content_types",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_branch": "include_branch",
+        "include_global_field_schema": "include_global_field_schema"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["branch"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "query": {
+          "type": "array",
+          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of content types to fetch from the stack. For example, if you set the limit to 10, then 10 content types will be fetched."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of content types to skip. For example, if you set the skip value to 3, the first three content types will be skipped."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_global_field_schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_content_type": {
+    "name": "get_a_single_content_type",
+    "description": "This tool retrieves the schema and configuration details of a specified content type within a stack, supporting optional inclusion of global field definitions and branch metadata for developer reference.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch",
+        "include_global_field_schema": "include_global_field_schema"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to fetch its details.",
+          "default": ""
+        },
+        "include_global_field_schema": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}
