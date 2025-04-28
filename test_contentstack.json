@@ -41,8 +41,8 @@
       }
     }
   },
-  "assign/reassign_a_branch_alias": {
-    "name": "assign/reassign_a_branch_alias",
+  "assign_reassign_a_branch_alias": {
+    "name": "assign_reassign_a_branch_alias",
     "description": "This tool assigns or reassigns a branch alias within a stack, enabling branch identification and routing. It requires specifying the alias identifier, the target branch, and the assignment action.",
     "mapper": {
       "apiUrl": "/v3/stacks/branch_aliases/branch_alias_id",
@@ -338,31 +338,20 @@
     "name": "create_a_taxonomy",
     "description": "This tool creates a new taxonomy object within the specified stack, assigning the provided UID, name, and optional description for structured content classification. Keywords: taxonomy, stack",
     "mapper": {
-      "apiUrl": "/v3/taxonomies",
-      "method": "POST",
-      "body": "JSON.stringify({ taxonomy: { uid, name, description } })"
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "uid",
-        "name"
-      ],
-      "properties": {
-        "uid": {
-          "type": "string",
-          "description": "Specify a UID to create a taxonomy."
-        },
-        "name": {
-          "type": "string",
-          "description": "Specify a title for the taxonomy."
-        },
-        "description": {
-          "type": "string",
-          "description": "Specify a description for the taxonomy."
-        }
+    "apiUrl": "/v3/taxonomies",
+    "method": "POST",
+    "body": "taxonomy_data"         
+  },
+  "inputSchema": {
+    "type": "object",
+    "required": ["taxonomy_data"],   
+    "properties": {
+      "taxonomy_data": {
+        "type": "object",
+        "description": "Must be { taxonomy: { uid, name, description } }"
       }
     }
+  }
   },
   "create_a_term": {
     "name": "create_a_term",
@@ -414,6 +403,9 @@
       "method": "DELETE",
       "queryParams": {
         "force": "force"
+      },
+      "params": {
+        "branch_alias_id": "branch_alias_id"
       }
     },
     "inputSchema": {
@@ -435,7 +427,10 @@
     "description": "This tool permanently deletes the specified asset from the selected branch within the stack. Asset management, deletion",
     "mapper": {
       "apiUrl": "/v3/assets/asset_id",
-      "method": "DELETE"
+      "method": "DELETE",
+      "params": {
+        "asset_id":"asset_id"
+      }
     },
     "inputSchema": {
       "type": "object",
@@ -634,7 +629,13 @@
     "description": "This tool exports a taxonomy and all its associated terms from the specified stack in the selected format, supporting structured data extraction for taxonomy management.",
     "mapper": {
       "apiUrl": "/v3/taxonomies/taxonomy_uid/export",
-      "method": "GET"
+      "method": "GET",
+      "queryParams": {
+        "format": "format"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
     },
     "inputSchema": {
       "type": "object",
@@ -821,9 +822,7 @@
         "include_publish_details": "include_publish_details",
         "include_branch": "include_branch",
         "version": "version",
-        "locale": "locale",
-        "query": "query",
-        "include[]": "include[]"
+        "locale": "locale"
       }
     },
     "inputSchema": {
@@ -857,14 +856,6 @@
         "locale": {
           "type": "string",
           "description": "Specify the locale to fetch the localized entries."
-        },
-        "query": {
-          "type": "array",
-          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
-        },
-        "include": {
-          "type": "array",
-          "description": "Enter the value of the referenced entries within your entry data"
         },
         "include_count": {
           "type": "boolean",
@@ -1008,8 +999,7 @@
         "include_referenced_terms_count": "include_referenced_terms_count",
         "include_referenced_entries_count": "include_referenced_entries_count",
         "deleted": "deleted",
-        "typeahead": "typeahead",
-        "query": "query"
+        "typeahead": "typeahead"
       }
     },
     "inputSchema": {
@@ -1027,10 +1017,6 @@
         "typeahead": {
           "type": "string",
           "description": "Specify a UID or name to search the taxonomies."
-        },
-        "query": {
-          "type": "string",
-          "description": "Select the taxonomies to fetch their details."
         },
         "include_count": {
           "type": "boolean",
@@ -1074,8 +1060,7 @@
         "deleted": "deleted",
         "include_order": "include_order",
         "depth": "depth",
-        "typeahead": "typeahead",
-        "query": "query"
+        "typeahead": "typeahead"
       }
     },
     "inputSchema": {
@@ -1099,10 +1084,6 @@
         "typeahead": {
           "type": "string",
           "description": "Specify a UID or name to search the term(s)."
-        },
-        "query": {
-          "type": "string",
-          "description": "Select the terms to fetch their details."
         },
         "depth": {
           "type": "number",
@@ -1366,8 +1347,7 @@
         "skip": "skip",
         "include_count": "include_count",
         "include_branch": "include_branch",
-        "include_global_field_schema": "include_global_field_schema",
-        "query": "query"
+        "include_global_field_schema": "include_global_field_schema"
       }
     },
     "inputSchema": {
@@ -1378,10 +1358,6 @@
           "type": "string",
           "description": "Select a branch from your stack.",
           "default": "main"
-        },
-        "query": {
-          "type": "array",
-          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
         },
         "limit": {
           "type": "string",
@@ -1487,8 +1463,7 @@
         "locale": "locale",
         "include_workflow": "include_workflow",
         "include_publish_details": "include_publish_details",
-        "include_branch": "include_branch",
-        "include[]": "include[]"
+        "include_branch": "include_branch"
       }
     },
     "inputSchema": {
@@ -1520,9 +1495,6 @@
         "locale": {
           "type": "string",
           "description": "Select a locale to fetch the entry details in that locale."
-        },
-        "include": {
-          "type": "array"
         },
         "include_workflow": {
           "type": "boolean"
@@ -2124,8 +2096,7 @@
       "queryParams": {
         "limit": "limit",
         "skip": "skip",
-        "include_count": "include_count",
-        "query": "query"
+        "include_count": "include_count"
       }
     },
     "inputSchema": {
@@ -2136,10 +2107,6 @@
           "type": "string",
           "description": "Select a branch from your stack.",
           "default": "main"
-        },
-        "query": {
-          "type": "string",
-          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
         },
         "limit": {
           "type": "string",
@@ -2156,8 +2123,8 @@
       }
     }
   },
-  "publish_variant(s)_of_an_entry": {
-    "name": "publish_variant(s)_of_an_entry",
+  "publish_variants_of_an_entry": {
+    "name": "publish_variants_of_an_entry",
     "description": "This tool publishes specified entry variants to selected environments and locales within a defined branch, supporting variant group targeting for content type entries. Keywords: publish, variants",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry/publish",
