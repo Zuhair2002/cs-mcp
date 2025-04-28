@@ -28,7 +28,7 @@ export type ToolData = Record<string, Tool>;
 
 export const getTools = async () => {
   const fileUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/contentstack.json";
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/test_contentstack.json";
   const respsonse = await axios.get(fileUrl);
   return {
     ...respsonse.data,
