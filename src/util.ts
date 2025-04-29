@@ -37,7 +37,7 @@ export const getTools = async () => {
 
 /**
  * Utility function to build a request for a Contentstack API endpoint
- * @param actionMapper The normalized action name
+ * @param actionMapper The normalized Api Endpoint Mapping
  * @param args Arguments provided by the user
  * @returns Request configuration for axios
  */
@@ -45,57 +45,63 @@ export function buildContentstackRequest(
   actionMapper: ApiEndpointMapping,
   args: Record<string, any>
 ) {
-  const mapping = actionMapper;
-
-  if (!mapping) {
-    throw new Error(`Unknown action: ${actionMapper}`);
+  if (!actionMapper) {
+    throw new Error(`Unknown action`);
   }
 
-  // Start with base URL
-  let url = mapping.apiUrl;
+  let url = actionMapper.apiUrl;
 
-  // Replace URL parameters
-  if (mapping.params) {
-    Object.entries(mapping.params).forEach(([paramName, argName]) => {
-      url = url.replace(new RegExp(paramName, "g"), args[argName] || "");
+  if (actionMapper.params) {
+    Object.entries(actionMapper.params).forEach(([paramName, argName]) => {
+      url = url.replace(new RegExp(paramName, "g"), args[argName] ?? "");
     });
   }
 
-  // Build query parameters
   const queryParams: Record<string, any> = {};
-  if (mapping.queryParams) {
-    Object.entries(mapping.queryParams).forEach(([paramName, argName]) => {
+  if (actionMapper.queryParams) {
+    Object.entries(actionMapper.queryParams).forEach(([paramName, argName]) => {
       if (args[argName] !== undefined) {
         queryParams[paramName] = args[argName];
       }
     });
   }
 
-  // Build request body
   let body: any = undefined;
-  if (mapping.body && args[mapping.body] !== undefined) {
-    // Handle JSON strings
-    if (
-      typeof args[mapping.body] === "string" &&
-      args[mapping.body].startsWith("{")
-    ) {
-      try {
-        body = JSON.parse(args[mapping.body]);
-      } catch (e) {
-        body = args[mapping.body];
+
+  if (actionMapper.body) {
+    const bodyKey = actionMapper.body;              
+
+    if (args[bodyKey] !== undefined) {
+      body = args[bodyKey];
+
+    } else if (typeof bodyKey === "string") {
+      const wrapper = bodyKey
+
+      const consumed = new Set<string>([
+        ...Object.values(actionMapper.params ?? {}),
+        ...Object.values(actionMapper.queryParams ?? {}),
+      ]);
+
+      const wrapped: Record<string, any> = {};
+      Object.entries(args).forEach(([k, v]) => {
+        if (!consumed.has(k)) {
+          wrapped[k] = v;              
+        }
+      });
+
+      if (Object.keys(wrapped).length > 0) {
+        body = { [wrapper]: wrapped }; 
       }
-    } else {
-      body = args[mapping.body];
     }
   }
 
   return {
-    method: mapping.method,
+    method: actionMapper.method,
     url: `https://api.contentstack.io${url}`,
     headers: {
       "Content-Type": "application/json",
     },
     data: body,
-    params: Object.keys(queryParams).length > 0 ? queryParams : undefined,
+    params: Object.keys(queryParams).length ? queryParams : undefined,
   };
 }
