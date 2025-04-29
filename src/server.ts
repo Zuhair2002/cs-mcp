@@ -8,6 +8,7 @@ import {
 import axios, { AxiosRequestConfig } from "axios";
 import type { ToolData } from "./util.ts";
 import { buildContentstackRequest, getTools } from "./util.ts";
+import { get_single_content_type_run } from "./api.ts"
 
 /**
  * Create a new MCP server for Contentstack
@@ -63,29 +64,44 @@ export function createContentstackMCPServer(options: {
         throw new Error(`Unknown tool: ${name}`);
       }
 
-      // Build request configuration
-      const requestConfig = buildContentstackRequest(mapper, args);
-
-      // Add authentication headers
-      requestConfig.headers = {
-        ...(requestConfig.headers as any),
-        api_key: apiKey,
-        authorization: managementToken,
+      let event = {
+        input: args,
+        apiConfig: {
+          API_URL: "https://api.contentstack.io"
+        },
+        headers: {
+          "Content-Type": "application/json",
+          api_key: apiKey,
+          authorization: managementToken,
+        }
       };
+      
 
-      let response;
-      try {
-        response = await axios(requestConfig as AxiosRequestConfig);
-      } catch (error) {
-        // console.error("API call failed:", error);
-      }
+      const response = await get_single_content_type_run(event);
+
+      // Build request configuration
+      // const requestConfig = buildContentstackRequest(mapper, args);
+
+      // // Add authentication headers
+      // requestConfig.headers = {
+      //   ...(requestConfig.headers as any),
+      //   api_key: apiKey,
+      //   authorization: managementToken,
+      // };
+
+      // let response;
+      // try {
+      //   response = await axios(requestConfig as AxiosRequestConfig);
+      // } catch (error) {
+      //   // console.error("API call failed:", error);
+      // }
 
       // Return response in MCP format
       return {
         content: [
           {
             type: "text",
-            text: JSON.stringify(response?.data ?? {}, null, 2),
+            text: JSON.stringify(response?? {}, null, 2),
           },
         ],
       };
