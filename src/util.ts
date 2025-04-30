@@ -70,32 +70,31 @@ export function buildContentstackRequest(
 
   let body: any = undefined;
 
-  // if (actionMapper.complex) {
-  //   body = buildPayload(actionMapper.body, args);
-  // }
-  // else {
+  if (actionMapper.complex) {
+    body = buildPayload(actionMapper.body, args);
+  }
+  else {
     const bodyKey = actionMapper.body;
     if (typeof bodyKey === "string") {
       const wrapper = actionMapper.wrapKeyword ?? bodyKey;
-      console.log("Wrapper: ", wrapper);
 
-      // const consumed = new Set<string>([
-      //   ...Object.values(actionMapper.params ?? {}),
-      //   ...Object.values(actionMapper.queryParams ?? {}),
-      // ]);
+      const consumed = new Set<string>([
+        ...Object.values(actionMapper.params ?? {}),
+        ...Object.values(actionMapper.queryParams ?? {}),
+      ]);
 
-      // const wrapped: Record<string, any> = {};
-      // Object.entries(args).forEach(([k, v]) => {
-      //   if (!consumed.has(k)) {
-      //     wrapped[k] = v;
-      //   }
-      // });
+      const wrapped: Record<string, any> = {};
+      Object.entries(args).forEach(([k, v]) => {
+        if (!consumed.has(k)) {
+          wrapped[k] = v;
+        }
+      });
 
-      // if (Object.keys(wrapped).length > 0) {
-        body = { [wrapper]: args };
-      // }
+      if (Object.keys(wrapped).length > 0) {
+        body = { [wrapper]: wrapped };
+      }
     }
-  // }
+  }
 
   return {
     method: actionMapper.method,
