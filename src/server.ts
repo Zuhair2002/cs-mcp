@@ -15,6 +15,12 @@ import { create_term_run, get_single_content_type_run } from "./api.ts"
  * @param options Configuration options
  * @returns An MCP server instance
  */
+
+export const functionMap: Record<string, (event: any) => Promise < any >> = {
+  create_term: create_term_run,
+  get_single_content_type: get_single_content_type_run,
+}
+
 export function createContentstackMCPServer(options: {
   apiKey: string;
   managementToken: string;
@@ -64,39 +70,40 @@ export function createContentstackMCPServer(options: {
         throw new Error(`Unknown tool: ${name}`);
       }
 
-      let event = {
-        input: args,
-        apiConfig: {
-          API_URL: "https://api.contentstack.io"
-        },
-        headers: {
-          "Content-Type": "application/json",
+      
+      let response;
+      if (functionMap.hasOwnProperty(name)) { 
+        let event = {
+          input: args,
+          apiConfig: {
+            API_URL: "https://api.contentstack.io"
+          },
+          headers: {
+            "Content-Type": "application/json",
+            api_key: apiKey,
+            authorization: managementToken,
+          }
+        };
+         response = await functionMap[name]?.call(null, event);
+      }
+      else {
+        // Build request configuration
+        const requestConfig = buildContentstackRequest(mapper, args);
+
+        // Add authentication headers
+        requestConfig.headers = {
+          ...(requestConfig.headers as any),
           api_key: apiKey,
           authorization: managementToken,
+        };
+
+        try {
+          response = await axios(requestConfig as AxiosRequestConfig);
+        } catch (error) {
+          console.error("API call failed:", error);
         }
-      };
-      
+      }
 
-      const response = await create_term_run(event);
-
-      // Build request configuration
-      // const requestConfig = buildContentstackRequest(mapper, args);
-
-      // // Add authentication headers
-      // requestConfig.headers = {
-      //   ...(requestConfig.headers as any),
-      //   api_key: apiKey,
-      //   authorization: managementToken,
-      // };
-
-      // let response;
-      // try {
-      //   response = await axios(requestConfig as AxiosRequestConfig);
-      // } catch (error) {
-      //   // console.error("API call failed:", error);
-      // }
-
-      // Return response in MCP format
       return {
         content: [
           {
