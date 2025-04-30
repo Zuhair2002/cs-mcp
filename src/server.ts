@@ -9,6 +9,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import type { ToolData } from "./util.ts";
 import { buildContentstackRequest, getTools } from "./util.ts";
 import { create_term_run, get_single_content_type_run } from "./api.ts"
+import { get } from "http";
 
 /**
  * Create a new MCP server for Contentstack
@@ -70,9 +71,9 @@ export function createContentstackMCPServer(options: {
         throw new Error(`Unknown tool: ${name}`);
       }
 
-      
+      console.log("name", name);
       let response;
-      if (functionMap.hasOwnProperty(name)) { 
+      // if (functionMap.hasOwnProperty(name)) { 
         let event = {
           input: args,
           apiConfig: {
@@ -84,25 +85,25 @@ export function createContentstackMCPServer(options: {
             authorization: managementToken,
           }
         };
-         response = await functionMap[name]?.call(null, event);
-      }
-      else {
-        // Build request configuration
-        const requestConfig = buildContentstackRequest(mapper, args);
+         response = await get_single_content_type_run(event);
+      // }
+      // else {
+      //   // Build request configuration
+      //   const requestConfig = buildContentstackRequest(mapper, args);
 
-        // Add authentication headers
-        requestConfig.headers = {
-          ...(requestConfig.headers as any),
-          api_key: apiKey,
-          authorization: managementToken,
-        };
+      //   // Add authentication headers
+      //   requestConfig.headers = {
+      //     ...(requestConfig.headers as any),
+      //     api_key: apiKey,
+      //     authorization: managementToken,
+      //   };
 
-        try {
-          response = await axios(requestConfig as AxiosRequestConfig);
-        } catch (error) {
-          console.error("API call failed:", error);
-        }
-      }
+      //   try {
+      //     response = await axios(requestConfig as AxiosRequestConfig);
+      //   } catch (error) {
+      //     console.error("API call failed:", error);
+      //   }
+      // }
 
       return {
         content: [
