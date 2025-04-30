@@ -15,6 +15,8 @@ export interface ApiEndpointMapping {
   body?: string; // The parameter name containing the request body
   queryParams?: Record<string, string>; // Maps query param names to argument names
   params?: Record<string, string>; // Maps URL param names to argument names
+  complex?: boolean; // The parameter name containing the request body
+  wrapKeyword?: string; // The wrapper name for the request body
 }
 
 export interface Tool {
@@ -28,7 +30,7 @@ export type ToolData = Record<string, Tool>;
 
 export const getTools = async () => {
   const fileUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/test/test_contentstack.json";
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/add-api-file/test_contentstack.json";
   const respsonse = await axios.get(fileUrl);
   return {
     ...respsonse.data,
@@ -68,14 +70,14 @@ export function buildContentstackRequest(
 
   let body: any = undefined;
 
-  if (actionMapper.body) {
-    const bodyKey = actionMapper.body;              
+  if (!actionMapper?.complex && actionMapper.body) {
+    const bodyKey = actionMapper.body;
 
     if (args[bodyKey] !== undefined) {
       body = args[bodyKey];
 
     } else if (typeof bodyKey === "string") {
-      const wrapper = bodyKey
+      const wrapper = actionMapper.wrapKeyword ?? bodyKey;
 
       const consumed = new Set<string>([
         ...Object.values(actionMapper.params ?? {}),
@@ -85,14 +87,17 @@ export function buildContentstackRequest(
       const wrapped: Record<string, any> = {};
       Object.entries(args).forEach(([k, v]) => {
         if (!consumed.has(k)) {
-          wrapped[k] = v;              
+          wrapped[k] = v;
         }
       });
 
       if (Object.keys(wrapped).length > 0) {
-        body = { [wrapper]: wrapped }; 
+        body = { [wrapper]: wrapped };
       }
     }
+  }
+  else if (actionMapper.complex) { 
+    body = buildPayload(actionMapper.body, args);
   }
 
   return {
@@ -105,3 +110,54 @@ export function buildContentstackRequest(
     params: Object.keys(queryParams).length ? queryParams : undefined,
   };
 }
+
+
+export function buildPayload(schema:any, data:any) {
+  if (schema.type === 'object') {
+    const result:any = {};
+    for (const key in schema.properties) {
+      const value = buildPayload(schema.properties[key], data);
+      if (value !== undefined) {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+
+  if (schema.type === 'array') {
+    const sourceKey = schema['x-mapFrom'];
+    const value = data[sourceKey];
+    console.log("Array sourceKey: ", sourceKey, " ", value);
+    if (value !== undefined) {
+      if (Array.isArray(value)) {
+        return value;
+      }
+      else {
+        return [value]
+      }
+    }
+    if ('default' in schema) return schema.default;
+    if (schema.optional) return undefined;
+    return [];
+  }
+
+  const sourceKey = schema['x-mapFrom'];
+  if (sourceKey && data[sourceKey] !== undefined) {
+    if (Array.isArray(data[sourceKey])) {
+      let val = data[sourceKey][0];
+      return val;
+    }
+    return data[sourceKey];
+  }
+
+  if ('default' in schema) {
+    return schema.default;
+  }
+
+  if (schema.optional) {
+    return undefined;
+  }
+
+  return null;
+}
+

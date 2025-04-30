@@ -64,37 +64,37 @@ export function createContentstackMCPServer(options: {
         throw new Error(`Unknown tool: ${name}`);
       }
 
-      let event = {
-        input: args,
-        apiConfig: {
-          API_URL: "https://api.contentstack.io"
-        },
-        headers: {
-          "Content-Type": "application/json",
-          api_key: apiKey,
-          authorization: managementToken,
-        }
-      };
+      // let event = {
+      //   input: args,
+      //   apiConfig: {
+      //     API_URL: "https://api.contentstack.io"
+      //   },
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     api_key: apiKey,
+      //     authorization: managementToken,
+      //   }
+      // };
       
 
-      const response = await get_single_content_type_run(event);
+      // const response = await get_single_content_type_run(event);
 
       // Build request configuration
-      // const requestConfig = buildContentstackRequest(mapper, args);
+      const requestConfig = buildContentstackRequest(mapper, args);
 
-      // // Add authentication headers
-      // requestConfig.headers = {
-      //   ...(requestConfig.headers as any),
-      //   api_key: apiKey,
-      //   authorization: managementToken,
-      // };
+      // Add authentication headers
+      requestConfig.headers = {
+        ...(requestConfig.headers as any),
+        api_key: apiKey,
+        authorization: managementToken,
+      };
 
-      // let response;
-      // try {
-      //   response = await axios(requestConfig as AxiosRequestConfig);
-      // } catch (error) {
-      //   // console.error("API call failed:", error);
-      // }
+      let response;
+      try {
+        response = await axios(requestConfig as AxiosRequestConfig);
+      } catch (error) {
+        // console.error("API call failed:", error);
+      }
 
       // Return response in MCP format
       return {
