@@ -70,7 +70,10 @@ export function buildContentstackRequest(
 
   let body: any = undefined;
 
-  if (!actionMapper?.complex && actionMapper.body) {
+  if (actionMapper.complex) {
+    body = buildPayload(actionMapper.body, args);
+  }
+  else {
     const bodyKey = actionMapper.body;
     if (typeof bodyKey === "string") {
       const wrapper = actionMapper.wrapKeyword ?? bodyKey;
@@ -91,9 +94,6 @@ export function buildContentstackRequest(
         body = { [wrapper]: wrapped };
       }
     }
-  }
-  else if (actionMapper.complex) { 
-    body = buildPayload(actionMapper.body, args);
   }
 
   return {

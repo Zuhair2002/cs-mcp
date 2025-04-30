@@ -348,7 +348,7 @@
       "params": {
         "taxonomy_uid": "taxonomy_uid"
       },
-      "wrapBody": "term"
+      "wrapKeyword": "term"
     },
     "inputSchema": {
       "type": "object",
