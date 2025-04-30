@@ -8,7 +8,7 @@ import {
 import axios, { AxiosRequestConfig } from "axios";
 import type { ToolData } from "./util.ts";
 import { buildContentstackRequest, getTools } from "./util.ts";
-import { get_single_content_type_run } from "./api.ts"
+import { create_term_run, get_single_content_type_run } from "./api.ts"
 
 /**
  * Create a new MCP server for Contentstack
@@ -77,7 +77,7 @@ export function createContentstackMCPServer(options: {
       };
       
 
-      const response = await get_single_content_type_run(event);
+      const response = await create_term_run(event);
 
       // Build request configuration
       // const requestConfig = buildContentstackRequest(mapper, args);

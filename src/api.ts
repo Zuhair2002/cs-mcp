@@ -117,4 +117,30 @@ export async function get_single_content_type_run(event:any) {
       return body;
     }
     throw await response.text();
+}
+  
+export async function create_term_run(event:any) {
+  const fetch = require("node-fetch");
+  const { API_URL } = event?.apiConfig;
+  const { taxonomy_uid, name, uid, order, parent_uid } = event.input;
+
+  const apiUrl = `${API_URL}/v3/taxonomies/${taxonomy_uid}/terms`;
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: event.headers,
+    body: JSON.stringify({
+      term: {
+        uid,
+        name,
+        order,
+        parent_uid: parent_uid ? parent_uid : null,
+      },
+    }),
+  });
+
+  if (response.ok) {
+    const body = await response.json();
+    return body;
   }
+  throw await response.text();
+}
