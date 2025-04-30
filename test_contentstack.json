@@ -313,7 +313,7 @@
     "mapper": {
       "apiUrl": "/v3/taxonomies",
       "method": "POST",
-      "body": "taxonomy_data",
+      "body": "body",
       "wrapKeyword": "taxonomy"
     },
     "inputSchema": {

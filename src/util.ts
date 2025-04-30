@@ -72,11 +72,7 @@ export function buildContentstackRequest(
 
   if (!actionMapper?.complex && actionMapper.body) {
     const bodyKey = actionMapper.body;
-
-    if (args[bodyKey] !== undefined) {
-      body = args[bodyKey];
-
-    } else if (typeof bodyKey === "string") {
+    if (typeof bodyKey === "string") {
       const wrapper = actionMapper.wrapKeyword ?? bodyKey;
 
       const consumed = new Set<string>([
