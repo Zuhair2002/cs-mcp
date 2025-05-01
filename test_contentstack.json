@@ -15,10 +15,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "release_id",
-        "item_data"
-      ],
+      "required": ["release_id", "item_data"],
       "properties": {
         "branch": {
           "type": "string",
@@ -41,8 +38,8 @@
       }
     }
   },
-  "assign/reassign_a_branch_alias": {
-    "name": "assign/reassign_a_branch_alias",
+  "assign_reassign_a_branch_alias": {
+    "name": "assign_reassign_a_branch_alias",
     "description": "This tool assigns or reassigns a branch alias within a stack, enabling branch identification and routing. It requires specifying the alias identifier, the target branch, and the assignment action.",
     "mapper": {
       "apiUrl": "/v3/stacks/branch_aliases/branch_alias_id",
@@ -56,11 +53,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "assign_action",
-        "branch_alias_id",
-        "target_branch"
-      ],
+      "required": ["assign_action", "branch_alias_id", "target_branch"],
       "properties": {
         "assign_action": {
           "type": "string",
@@ -96,10 +89,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "release_id",
-        "name"
-      ],
+      "required": ["release_id", "name"],
       "properties": {
         "branch": {
           "type": "string",
@@ -137,11 +127,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "key",
-        "body",
-        "title"
-      ],
+      "required": ["key", "body", "title"],
       "properties": {
         "branch": {
           "type": "string",
@@ -181,10 +167,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "source_branch",
-        "branch_uid"
-      ],
+      "required": ["source_branch", "branch_uid"],
       "properties": {
         "source_branch": {
           "type": "string",
@@ -200,25 +183,22 @@
   },
   "create_an_entry": {
     "name": "create_an_entry",
-    "description": "This tool creates a new entry in the specified Contentstack stack, targeting the defined branch, content type, and locale. Entry data must be encapsulated within an 'entry' object. Suitable for automated content creation workflows. Keywords: entry creation, content type.",
+    "description": "This tool creates a new entry in the specified Contentstack stack, targeting a defined content type and branch, with support for locale selection and structured entry data.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries",
       "method": "POST",
       "body": "entry_data",
-      "params": {
-        "content_type_name": "content_type_name"
-      },
       "queryParams": {
         "locale": "locale",
         "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_data"
-      ],
+      "required": ["content_type_name", "entry_data"],
       "properties": {
         "branch": {
           "type": "string",
@@ -262,12 +242,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_data",
-        "entry_id",
-        "locale"
-      ],
+      "required": ["content_type_name", "entry_data", "entry_id", "locale"],
       "properties": {
         "branch": {
           "type": "string",
@@ -311,9 +286,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "name"
-      ],
+      "required": ["name"],
       "properties": {
         "name": {
           "type": "string",
@@ -340,14 +313,11 @@
     "mapper": {
       "apiUrl": "/v3/taxonomies",
       "method": "POST",
-      "body": "JSON.stringify({ taxonomy: { uid, name, description } })"
+      "body": "taxonomy_data"
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "uid",
-        "name"
-      ],
+      "required": ["uid", "name", "taxonomy_data"],
       "properties": {
         "uid": {
           "type": "string",
@@ -360,6 +330,10 @@
         "description": {
           "type": "string",
           "description": "Specify a description for the taxonomy."
+        },
+        "taxonomy_data": {
+          "type": "object",
+          "description": "Enter the taxonomy data in JSON format, including UID, name, and optional description. the passed data should be in the format: { taxonomy: { uid, name, description } }"
         }
       }
     }
@@ -376,12 +350,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "uid",
-        "name",
-        "order"
-      ],
+      "required": ["taxonomy_uid", "uid", "name", "order"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -414,13 +383,14 @@
       "method": "DELETE",
       "queryParams": {
         "force": "force"
+      },
+      "params": {
+        "branch_alias_id": "branch_alias_id"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "branch_alias_id"
-      ],
+      "required": ["branch_alias_id"],
       "properties": {
         "branch_alias_id": {
           "type": "string",
@@ -435,13 +405,14 @@
     "description": "This tool permanently deletes the specified asset from the selected branch within the stack. Asset management, deletion",
     "mapper": {
       "apiUrl": "/v3/assets/asset_id",
-      "method": "DELETE"
+      "method": "DELETE",
+      "params": {
+        "asset_id": "asset_id"
+      }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "asset_id"
-      ],
+      "required": ["asset_id"],
       "properties": {
         "branch": {
           "type": "string",
@@ -470,9 +441,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "branch_id"
-      ],
+      "required": ["branch_id"],
       "properties": {
         "branch_id": {
           "type": "string",
@@ -484,18 +453,21 @@
   },
   "delete_an_entry": {
     "name": "delete_an_entry",
-    "description": "This tool permanently deletes a specified entry from a given content type within a stack, supporting branch, locale, and localized entry deletion options. Keywords: entry deletion, content type",
+    "description": "This tool deletes a specified entry from a Contentstack stack, targeting the provided content type and entry ID, with optional parameters for branch, locale, and deletion of all localized variants.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
       "method": "DELETE",
-      "body": "JSON.stringify(body)"
+      "queryParams": {
+        "delete_all_localized": "delete_all_localized"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_id"
-      ],
+      "required": ["content_type_name", "entry_id"],
       "properties": {
         "branch": {
           "type": "string",
@@ -538,9 +510,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid"
-      ],
+      "required": ["taxonomy_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -569,10 +539,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "term_uid"
-      ],
+      "required": ["taxonomy_uid", "term_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -602,10 +569,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "release_id",
-        "environments"
-      ],
+      "required": ["release_id", "environments"],
       "properties": {
         "branch": {
           "type": "string",
@@ -634,13 +598,17 @@
     "description": "This tool exports a taxonomy and all its associated terms from the specified stack in the selected format, supporting structured data extraction for taxonomy management.",
     "mapper": {
       "apiUrl": "/v3/taxonomies/taxonomy_uid/export",
-      "method": "GET"
+      "method": "GET",
+      "queryParams": {
+        "format": "format"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid"
-      ],
+      "required": ["taxonomy_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -805,32 +773,28 @@
   },
   "get_all_entries": {
     "name": "get_all_entries",
-    "description": "This tool retrieves all entries for a specified content type within a stack branch, supporting pagination via limit and skip parameters. Keywords: entries, content type.",
+    "description": "This tool retrieves entry details for a specified content type within a Contentstack stack, supporting branch selection, pagination, versioning, locale filtering, advanced query parameters, and optional inclusion of metadata, workflow, branch, and publish details. Keywords: entry retrieval, content type.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries",
       "method": "GET",
-      "params": {
-        "content_type_name": "content_type_name"
-      },
       "queryParams": {
         "limit": "limit",
         "skip": "skip",
         "include_count": "include_count",
         "include_metadata": "include_metadata",
-        "include_workflow": "include_workflow",
-        "include_publish_details": "include_publish_details",
-        "include_branch": "include_branch",
         "version": "version",
         "locale": "locale",
-        "query": "query",
-        "include[]": "include[]"
+        "include_workflow": "include_workflow",
+        "include_publish_details": "include_publish_details",
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name"
-      ],
+      "required": ["content_type_name"],
       "properties": {
         "branch": {
           "type": "string",
@@ -857,14 +821,6 @@
         "locale": {
           "type": "string",
           "description": "Specify the locale to fetch the localized entries."
-        },
-        "query": {
-          "type": "array",
-          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
-        },
-        "include": {
-          "type": "array",
-          "description": "Enter the value of the referenced entries within your entry data"
         },
         "include_count": {
           "type": "boolean",
@@ -927,9 +883,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "release_id"
-      ],
+      "required": ["release_id"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1008,8 +962,7 @@
         "include_referenced_terms_count": "include_referenced_terms_count",
         "include_referenced_entries_count": "include_referenced_entries_count",
         "deleted": "deleted",
-        "typeahead": "typeahead",
-        "query": "query"
+        "typeahead": "typeahead"
       }
     },
     "inputSchema": {
@@ -1027,10 +980,6 @@
         "typeahead": {
           "type": "string",
           "description": "Specify a UID or name to search the taxonomies."
-        },
-        "query": {
-          "type": "string",
-          "description": "Select the taxonomies to fetch their details."
         },
         "include_count": {
           "type": "boolean",
@@ -1074,15 +1023,12 @@
         "deleted": "deleted",
         "include_order": "include_order",
         "depth": "depth",
-        "typeahead": "typeahead",
-        "query": "query"
+        "typeahead": "typeahead"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid"
-      ],
+      "required": ["taxonomy_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -1099,10 +1045,6 @@
         "typeahead": {
           "type": "string",
           "description": "Specify a UID or name to search the term(s)."
-        },
-        "query": {
-          "type": "string",
-          "description": "Select the terms to fetch their details."
         },
         "depth": {
           "type": "number",
@@ -1148,9 +1090,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "typeahead"
-      ],
+      "required": ["typeahead"],
       "properties": {
         "typeahead": {
           "type": "string",
@@ -1192,10 +1132,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_uid"
-      ],
+      "required": ["content_type_name", "entry_uid"],
       "properties": {
         "content_type_name": {
           "type": "string",
@@ -1230,10 +1167,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "term_uid"
-      ],
+      "required": ["taxonomy_uid", "term_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -1282,9 +1216,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "asset_id"
-      ],
+      "required": ["asset_id"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1315,9 +1247,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "asset_id"
-      ],
+      "required": ["asset_id"],
       "properties": {
         "asset_id": {
           "type": "string",
@@ -1343,9 +1273,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "Branch_id"
-      ],
+      "required": ["Branch_id"],
       "properties": {
         "Branch_id": {
           "type": "string",
@@ -1357,7 +1285,7 @@
   },
   "get_all_content_types": {
     "name": "get_all_content_types",
-    "description": "This tool retrieves metadata for all content types within the specified stack branch, supporting pagination via limit and skip parameters, and optional filtering using key-value query pairs. Keywords: content types, metadata",
+    "description": "This tool retrieves the schema and metadata of a specified content type from a Contentstack stack, supporting branch selection, query filtering, pagination, and optional inclusion of global field schema and branch metadata.",
     "mapper": {
       "apiUrl": "/v3/content_types",
       "method": "GET",
@@ -1366,22 +1294,17 @@
         "skip": "skip",
         "include_count": "include_count",
         "include_branch": "include_branch",
-        "include_global_field_schema": "include_global_field_schema",
-        "query": "query"
+        "include_global_field_schema": "include_global_field_schema"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": [],
+      "required": ["branch"],
       "properties": {
         "branch": {
           "type": "string",
           "description": "Select a branch from your stack.",
           "default": "main"
-        },
-        "query": {
-          "type": "array",
-          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
         },
         "limit": {
           "type": "string",
@@ -1428,10 +1351,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "term_uid"
-      ],
+      "required": ["taxonomy_uid", "term_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -1474,29 +1394,25 @@
   },
   "get_single_entry": {
     "name": "get_single_entry",
-    "description": "This tool retrieves metadata and field values for a single entry from a specified content type, branch, and locale within a Contentstack stack. Supports version selection and optional inclusion of workflow details. Keywords: entry retrieval, metadata.",
+    "description": "This tool retrieves metadata and field values for a specified entry within a given content type, supporting branch, version, and locale selection, with optional inclusion of workflow, branch, and publish details. Keywords: entry retrieval, metadata.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
       "method": "GET",
-      "params": {
-        "content_type_name": "content_type_name",
-        "entry_id": "entry_id"
-      },
       "queryParams": {
         "version": "version",
         "locale": "locale",
         "include_workflow": "include_workflow",
         "include_publish_details": "include_publish_details",
-        "include_branch": "include_branch",
-        "include[]": "include[]"
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_id"
-      ],
+      "required": ["content_type_name", "entry_id"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1521,9 +1437,6 @@
           "type": "string",
           "description": "Select a locale to fetch the entry details in that locale."
         },
-        "include": {
-          "type": "array"
-        },
         "include_workflow": {
           "type": "boolean"
         },
@@ -1545,9 +1458,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "merge_job_uid"
-      ],
+      "required": ["merge_job_uid"],
       "properties": {
         "merge_job_uid": {
           "type": "string",
@@ -1572,9 +1483,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "release_id"
-      ],
+      "required": ["release_id"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1602,9 +1511,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "branch_alias_id"
-      ],
+      "required": ["branch_alias_id"],
       "properties": {
         "branch_alias_id": {
           "type": "string",
@@ -1616,7 +1523,7 @@
   },
   "get_a_single_content_type": {
     "name": "get_a_single_content_type",
-    "description": "This tool retrieves the schema and configuration details of a specified content type within a Contentstack stack, supporting options to include global field definitions and branch metadata.",
+    "description": "This tool retrieves the schema and configuration details of a specified content type within a stack, supporting optional inclusion of global field definitions and branch metadata for developer reference.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name",
       "method": "GET",
@@ -1630,9 +1537,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name"
-      ],
+      "required": ["content_type_name"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1682,12 +1587,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_id",
-        "locale",
-        "variant_uid"
-      ],
+      "required": ["content_type_name", "entry_id", "locale", "variant_uid"],
       "properties": {
         "content_type_name": {
           "type": "string",
@@ -1766,9 +1666,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "global_field_uid"
-      ],
+      "required": ["global_field_uid"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1800,9 +1698,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "variant_id"
-      ],
+      "required": ["variant_id"],
       "properties": {
         "variant_group_uid": {
           "type": "string",
@@ -1832,9 +1728,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid"
-      ],
+      "required": ["taxonomy_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -1872,10 +1766,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "term_uid"
-      ],
+      "required": ["taxonomy_uid", "term_uid"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -1906,9 +1797,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "user_ids"
-      ],
+      "required": ["user_ids"],
       "properties": {
         "user_ids": {
           "type": "string",
@@ -1931,9 +1820,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_uid"
-      ],
+      "required": ["content_type_uid"],
       "properties": {
         "content_type_uid": {
           "type": "string",
@@ -1953,10 +1840,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "format",
-        "body"
-      ],
+      "required": ["format", "body"],
       "properties": {
         "format": {
           "type": "string",
@@ -2028,10 +1912,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "asset",
-        "environments"
-      ],
+      "required": ["asset", "environments"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2073,12 +1954,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry",
-        "environments",
-        "locales"
-      ],
+      "required": ["content_type_name", "entry", "environments", "locales"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2124,8 +2000,7 @@
       "queryParams": {
         "limit": "limit",
         "skip": "skip",
-        "include_count": "include_count",
-        "query": "query"
+        "include_count": "include_count"
       }
     },
     "inputSchema": {
@@ -2136,10 +2011,6 @@
           "type": "string",
           "description": "Select a branch from your stack.",
           "default": "main"
-        },
-        "query": {
-          "type": "string",
-          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
         },
         "limit": {
           "type": "string",
@@ -2156,8 +2027,8 @@
       }
     }
   },
-  "publish_variant(s)_of_an_entry": {
-    "name": "publish_variant(s)_of_an_entry",
+  "publish_variants_of_an_entry": {
+    "name": "publish_variants_of_an_entry",
     "description": "This tool publishes specified entry variants to selected environments and locales within a defined branch, supporting variant group targeting for content type entries. Keywords: publish, variants",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry/publish",
@@ -2246,10 +2117,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "release_id",
-        "item_data"
-      ],
+      "required": ["release_id", "item_data"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2289,11 +2157,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_id",
-        "workflow_stage_uid"
-      ],
+      "required": ["content_type_name", "entry_id", "workflow_stage_uid"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2360,11 +2224,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_id",
-        "locale"
-      ],
+      "required": ["content_type_name", "entry_id", "locale"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2401,10 +2261,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "asset",
-        "environments"
-      ],
+      "required": ["asset", "environments"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2446,11 +2303,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry",
-        "environments"
-      ],
+      "required": ["content_type_name", "entry", "environments"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2496,9 +2349,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "asset_id"
-      ],
+      "required": ["asset_id"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2534,27 +2385,23 @@
   },
   "update_an_entry": {
     "name": "update_an_entry",
-    "description": "This tool updates a specified entry within a Contentstack stack by content type and entry ID, supporting branch and locale selection; entry data must be provided in the required object structure. Keywords: entry update, content type.",
+    "description": "This tool updates an existing entry in a specified Contentstack stack, branch, and locale by modifying its field data according to the provided content type and entry identifier. Keywords: entry update, content type.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
       "method": "PUT",
       "body": "entry_data",
-      "params": {
-        "content_type_name": "content_type_name",
-        "entry_id": "entry_id"
-      },
       "queryParams": {
         "locale": "locale",
         "include_branch": "include_branch"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_id",
-        "entry_data"
-      ],
+      "required": ["content_type_name", "entry_id", "entry_data"],
       "properties": {
         "branch": {
           "type": "string",
@@ -2598,11 +2445,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "name",
-        "description"
-      ],
+      "required": ["taxonomy_uid", "name", "description"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
@@ -2633,11 +2476,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "term_uid",
-        "name"
-      ],
+      "required": ["taxonomy_uid", "term_uid", "name"],
       "properties": {
         "taxonomy_uid": {
           "type": "string",
