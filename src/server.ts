@@ -57,7 +57,7 @@ export function createContentstackMCPServer(options: {
     if (!name || !args) {
       throw new Error("Invalid request: Missing tool name or arguments");
     }
-
+    let requestConfig;
     try {
       // Get action name from tool name
       const mapper = toolData[name].mapper;
@@ -66,7 +66,7 @@ export function createContentstackMCPServer(options: {
       }
 
       // Build request configuration
-      const requestConfig = buildContentstackRequest(mapper, args);
+      requestConfig = buildContentstackRequest(mapper, args);
 
       // Add authentication headers
       requestConfig.headers = {
@@ -93,7 +93,7 @@ export function createContentstackMCPServer(options: {
         throw new Error(`Request failed: ${axiosError.message}`);
       }
     } catch (error: any) {
-      throw new Error(`Tool execution failed: ${error.message}`);
+      throw new Error(`Tool execution failed: ${requestConfig}`);
     }
   });
 
