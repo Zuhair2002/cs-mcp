@@ -1948,7 +1948,7 @@
     "name": "publish_an_entry",
     "description": "This tool publishes a specified entry from a selected content type to one or more environments and locales within a designated branch of the stack. Content publishing, environments",
     "mapper": {
-      "apiUrl": "/v3/bulk/publish",
+      "apiUrl": "/v3/content_types/content_type_uid/entries/entry/publish",
       "method": "POST",
       "body": {
         "type": "object",
@@ -1988,9 +1988,9 @@
           }
         }
       },
-      "queryParams": {
-        "publish_with_reference": "publish_with_reference",
-        "x-bulk-action": "x-bulk-action"
+      "params": {
+        "content_type_uid": "content_type_name",
+        "entry": "entry"
       },
       "complex": true
     },

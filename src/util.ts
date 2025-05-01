@@ -97,7 +97,7 @@ export function buildContentstackRequest(
     headers: {
       "Content-Type": "application/json",
     },
-    data: body,
+    data: JSON.stringify(body),
     params: Object.keys(queryParams).length ? queryParams : undefined,
   };
 }

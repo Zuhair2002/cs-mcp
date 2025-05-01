@@ -65,37 +65,34 @@ export function createContentstackMCPServer(options: {
         throw new Error(`Unknown tool: ${name}`);
       }
 
-      let response;
+      // Build request configuration
+      const requestConfig = buildContentstackRequest(mapper, args);
 
-        // Build request configuration
-        const requestConfig = buildContentstackRequest(mapper, args);
-
-        // Add authentication headers
-        requestConfig.headers = {
-          ...(requestConfig.headers as any),
-          api_key: apiKey,
-          authorization: managementToken,
-        };
-
-        try {
-          response = await axios(requestConfig as AxiosRequestConfig);
-        } catch (error) {
-          console.error("API call failed:", error);
-        }
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(response?? {}, null, 2),
-          },
-        ],
+      // Add authentication headers
+      requestConfig.headers = {
+        ...(requestConfig.headers as any),
+        api_key: apiKey,
+        authorization: managementToken,
       };
-    } catch (error: any) {
-      //   console.error("API call failed:", error.message);
-      if (error.response) {
-        // console.error("Response data:", error.response.data);
+
+      try {
+        const response = await axios(requestConfig as AxiosRequestConfig);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(response.data, null, 2),
+            },
+          ],
+        };
+      } catch (axiosError: any) {
+        // Handle Axios error specifically
+        if (axiosError.response?.data) {
+          throw new Error(`API Error: ${JSON.stringify(axiosError.response.data)}`);
+        }
+        throw new Error(`Request failed: ${axiosError.message}`);
       }
+    } catch (error: any) {
       throw new Error(`Tool execution failed: ${error.message}`);
     }
   });
