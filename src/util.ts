@@ -149,6 +149,6 @@ export function buildPayload(schema:any, data:any) {
     return undefined;
   }
 
-  return null;
+  return;
 }
 
