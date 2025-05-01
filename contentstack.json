@@ -165,8 +165,8 @@
       }
     }
   },
-  "get_a_single_entry": {
-    "name": "get_a_single_entry",
+  "get_single_entry": {
+    "name": "get_single_entry",
     "description": "This tool retrieves metadata and field values for a specified entry within a given content type, supporting branch, version, and locale selection, with optional inclusion of workflow, branch, and publish details. Keywords: entry retrieval, metadata.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
@@ -176,8 +176,7 @@
         "locale": "locale",
         "include_workflow": "include_workflow",
         "include_publish_details": "include_publish_details",
-        "include_branch": "include_branch",
-        "include": "include[]"
+        "include_branch": "include_branch"
       },
       "params": {
         "content_type_name": "content_type_name",
@@ -210,9 +209,6 @@
         "locale": {
           "type": "string",
           "description": "Select a locale to fetch the entry details in that locale."
-        },
-        "include": {
-          "type": "array"
         },
         "include_workflow": {
           "type": "boolean"
@@ -358,6 +354,998 @@
           "default": true
         },
         "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+
+  "get_all_taxonomies": {
+    "name": "get_all_taxonomies",
+    "description": "This tool retrieves metadata for all taxonomies within a specified stack, supporting pagination via limit and skip parameters, and enabling filtered search by UID or name. Keywords: taxonomy, pagination",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_terms_count": "include_terms_count",
+        "include_referenced_terms_count": "include_referenced_terms_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "deleted": "deleted",
+        "typeahead": "typeahead"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of taxonomies to retrieve from the stack. For example, if you set the limit to 10, then the first 10 taxonomies will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of taxonomies to skip. For example, if you set the skip value to 3, the first three taxonomies will be skipped and the results will start with the fourth item."
+        },
+        "typeahead": {
+          "type": "string",
+          "description": "Specify a UID or name to search the taxonomies."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_terms_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_terms_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "deleted": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_taxonomy": {
+    "name": "get_a_single_taxonomy",
+    "description": "This tool retrieves metadata and configuration details for a specified taxonomy, with optional inclusion of term, referenced term, and referenced entry counts for advanced content modeling and reporting.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid",
+      "method": "GET",
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      },
+      "queryParams": {
+        "include_terms_count": "include_terms_count",
+        "include_referenced_terms_count": "include_referenced_terms_count",
+        "include_referenced_entries_count": "include_referenced_entries_count"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["taxonomy_uid"],
+      "properties": {
+        "taxonomy_uid": {
+          "type": "string",
+          "description": "Select a taxonomy to fetch its details."
+        },
+        "include_terms_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_terms_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "export_a_taxonomy": {
+    "name": "export_a_taxonomy",
+    "description": "This tool exports a taxonomy and all its associated terms from the specified stack in the selected format, supporting structured data extraction for taxonomy management.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/export",
+      "method": "GET",
+      "queryParams": {
+        "format": "format"
+      },
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["taxonomy_uid"],
+      "properties": {
+        "taxonomy_uid": {
+          "type": "string",
+          "description": "Select a taxonomy you want to export. This exports all the associated terms within the selected taxonomy."
+        },
+        "format": {
+          "type": "string",
+          "description": "Select the format in which you want to export the taxonomy.",
+          "default": "json"
+        }
+      }
+    }
+  },
+  "get_all_languages": {
+    "name": "get_all_languages",
+    "description": "This tool retrieves metadata for all languages configured within a specified stack branch, supporting pagination via limit and skip parameters. Localization, language management.",
+    "mapper": {
+      "apiUrl": "/v3/locales",
+      "method": "GET",
+      "queryParams": {
+        "include_count": "include_count",
+        "include_branch": "include_branch",
+        "limit": "limit",
+        "skip": "skip"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of languages to retrieve from the stack. For example, if you set the limit to 10, then the first 10 languages will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of languages to skip. For example, if you set the skip value to 3, the first three languages will be skipped and the results will start with the fourth item."
+        },
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_branch_aliases": {
+    "name": "get_all_branch_aliases",
+    "description": "This tool retrieves metadata for all branch aliases within a specified stack, supporting pagination via limit and skip parameters. Keywords: branch aliases, stack.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branch_aliases",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of branch aliases to retrieve from the stack. For example, if you set the limit to 10, then 10 branch aliases will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of branch aliases to skip. For example, if you set the skip value to 3, the first three branch aliases will be skipped and the results will start with the fourth item."
+        }
+      }
+    }
+  },
+  "get_all_assets": {
+    "name": "get_all_assets",
+    "description": "This tool retrieves metadata for all assets within a specified stack, supporting environment and branch filters, with pagination via limit and skip parameters. Keywords: asset retrieval, metadata.",
+    "mapper": {
+      "apiUrl": "/v3/assets",
+      "method": "GET",
+      "queryParams": {
+        "environment": "environment",
+        "limit": "limit",
+        "skip": "skip",
+        "folder": "folder_id",
+        "include_count": "include_count",
+        "include_publish_details": "include_publish_details",
+        "include_metadata": "include_metadata"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "environment": {
+          "type": "string",
+          "description": "Select an environment to fetch the asset details.",
+          "default": ""
+        },
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of assets to retrieve from the stack. For example, if you set the limit to 10, then 10 assets will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of assets to skip. For example, if you set the skip value to 3, the first three assets will be skipped and the results will start with the fourth item."
+        },
+        "folder_id": {
+          "type": "string",
+          "description": "Select a folder to fetch the details of all the assets in that folder."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_branches": {
+    "name": "get_all_branches",
+    "description": "This tool retrieves metadata for all branches within a specified stack, supporting pagination via limit and skip parameters. Keywords: branches, stack",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of branches to retrieve from the stack. For example, if you set the limit to 10, then the first 10 branches will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of branches to skip. For example, if you set the skip value to 3, the first three branches will be skipped and the results will start with the fourth item."
+        }
+      }
+    }
+  },
+  "get_all_global_fields": {
+    "name": "get_all_global_fields",
+    "description": "This tool retrieves metadata for all global fields configured within the specified stack, supporting optional branch selection and branch metadata inclusion.",
+    "mapper": {
+      "apiUrl": "/v3/global_fields",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["branch"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_items_in_a_release": {
+    "name": "get_all_items_in_a_release",
+    "description": "This tool retrieves metadata and content details for all items associated with the specified release_id, optionally including branch information if include_branch is true.",
+    "mapper": {
+      "apiUrl": "/v3/releases/release_id/items",
+      "method": "GET",
+      "params": {
+        "release_id": "release_id"
+      },
+      "queryParams": {
+        "include_branch": "include_branch"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["release_id"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "release_id": {
+          "type": "string",
+          "description": "Select a release from which you want to fetch the item details.",
+          "default": ""
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_releases": {
+    "name": "get_all_releases",
+    "description": "This tool retrieves metadata for all releases within a specified stack, supporting branch selection, pagination via limit and skip parameters, and optional inclusion of total and item counts. Keywords: releases, metadata",
+    "mapper": {
+      "apiUrl": "/v3/releases",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_items_count": "include_items_count",
+        "include_branch": "include_branch"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["branch"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of releases to retrieve from the stack. For example, if you set the limit to 10, then 10 releases will be fetched."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of releases to skip. For example, if you set the skip value to 3, the first three releases will be skipped."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_items_count": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_terms": {
+    "name": "get_all_terms",
+    "description": "This tool retrieves all term details for a specified taxonomy from the stack, supporting pagination via limit and skip parameters. Keywords: taxonomy, terms.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms",
+      "method": "GET",
+      "params": {
+        "taxonomy_uid": "taxonomy_uid"
+      },
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_children_count": "include_children_count",
+        "include_referenced_terms_count": "include_referenced_terms_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "deleted": "deleted",
+        "include_order": "include_order",
+        "depth": "depth",
+        "typeahead": "typeahead"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["taxonomy_uid"],
+      "properties": {
+        "taxonomy_uid": {
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of all the terms."
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "typeahead": {
+          "type": "string",
+          "description": "Specify a UID or name to search the term(s)."
+        },
+        "depth": {
+          "type": "number",
+          "description": "Specify the depth to fetch the terms from the root level. By default, the terms are fetched from the root."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_order": {
+          "type": "boolean",
+          "default": false
+        },
+        "deleted": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_terms_across_all_taxonomies": {
+    "name": "get_all_terms_across_all_taxonomies",
+    "description": "This tool retrieves term details from all taxonomies within the stack, supporting typeahead search, pagination via limit and skip, and optional total count inclusion. Keywords: taxonomy, term.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/$all/terms",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_children_count": "include_children_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "typeahead": "typeahead"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["typeahead"],
+      "properties": {
+        "typeahead": {
+          "type": "string",
+          "description": "Specify a UID or name to search the term(s)."
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_variants_of_an_entry": {
+    "name": "get_all_variants_of_an_entry",
+    "description": "This tool retrieves all locale variants of a specified entry within the selected content type, enabling access to localized entry data for further processing or analysis.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_uid/variants",
+      "method": "GET",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_uid": "entry_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name", "entry_uid"],
+      "properties": {
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to fetch the details of all the variants of an entry.",
+          "default": ""
+        },
+        "entry_uid": {
+          "type": "string",
+          "description": "Select an entry to fetch the details of its variants.",
+          "default": ""
+        }
+      }
+    }
+  },
+  "get_all_ancestors_of_a_term": {
+    "name": "get_all_ancestors_of_a_term",
+    "description": "This tool retrieves the complete ancestor hierarchy for a specified term within a taxonomy, supporting pagination via limit and skip parameters. Keywords: taxonomy, hierarchy.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms/term_uid/ancestors",
+      "method": "GET",
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      },
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "include_order": "include_order"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["taxonomy_uid", "term_uid"],
+      "properties": {
+        "taxonomy_uid": {
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of all the terms."
+        },
+        "term_uid": {
+          "type": "string",
+          "description": "Select a term to fetch its ancestors."
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_asset": {
+    "name": "get_a_single_asset",
+    "description": "This tool retrieves metadata and properties for a specified asset within a Contentstack stack, supporting branch, environment, and version parameters for precise asset identification and retrieval. Keywords: asset, metadata",
+    "mapper": {
+      "apiUrl": "/v3/assets/asset_id",
+      "method": "GET",
+      "params": {
+        "asset_id": "asset_id"
+      },
+      "queryParams": {
+        "version": "version",
+        "environment": "environment"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["asset_id"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "asset_id": {
+          "type": "string",
+          "description": "Select an asset to fetch its details."
+        },
+        "environment": {
+          "type": "string",
+          "description": "Select an environment to fetch the asset details."
+        },
+        "version": {
+          "type": "string",
+          "description": "Enter the asset version to fetch its details."
+        }
+      }
+    }
+  },
+  "get_asset_reference": {
+    "name": "get_asset_reference",
+    "description": "This tool retrieves all entries referencing the specified asset within the selected branch, enabling asset dependency analysis and content relationship management.",
+    "mapper": {
+      "apiUrl": "/v3/assets/asset_id/references",
+      "method": "GET",
+      "params": {
+        "asset_id": "asset_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["asset_id"],
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "description": "Select an asset to view all entries where it is referenced."
+        },
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        }
+      }
+    }
+  },
+  "get_a_single_branch": {
+    "name": "get_a_single_branch",
+    "description": "This tool retrieves metadata and configuration details for a specified branch within a Contentstack stack, enabling branch-level inspection and management.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branches/branch_id",
+      "method": "GET",
+      "params": {
+        "branch_id": "branch_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["Branch_id"],
+      "properties": {
+        "Branch_id": {
+          "type": "string",
+          "description": "Select a branch to fetch its details.",
+          "default": ""
+        }
+      }
+    }
+  },
+  "get_all_descendants_of_a_term": {
+    "name": "get_all_descendants_of_a_term",
+    "description": "This tool retrieves all descendant terms of a specified taxonomy term, supporting pagination via limit and skip parameters. Suitable for hierarchical taxonomy traversal and term management.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms/term_uid/descendants",
+      "method": "GET",
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      },
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count",
+        "include_children_count": "include_children_count",
+        "include_referenced_entries_count": "include_referenced_entries_count",
+        "include_order": "include_order",
+        "depth": "depth"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["taxonomy_uid", "term_uid"],
+      "properties": {
+        "taxonomy_uid": {
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of all the terms."
+        },
+        "term_uid": {
+          "type": "string",
+          "description": "Select a term to fetch its descendants."
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of terms to retrieve from the stack. For example, if you set the limit to 10, then the first 10 terms will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of terms to skip. For example, if you set the skip value to 3, the first three terms will be skipped and the results will start with the fourth item."
+        },
+        "depth": {
+          "type": "number",
+          "description": "Specify the depth to fetch the descendants of a term."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_children_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_order": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_release": {
+    "name": "get_a_single_release",
+    "description": "This tool retrieves metadata and configuration details for a specified release within a given branch, supporting optional inclusion of branch information for developer reference and audit purposes.",
+    "mapper": {
+      "apiUrl": "/v3/releases/release_id",
+      "method": "GET",
+      "params": {
+        "release_id": "release_id"
+      },
+      "queryParams": {
+        "include_branch": "include_branch"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["release_id"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "release_id": {
+          "type": "string",
+          "description": "Select a release to fetch its details.",
+          "default": ""
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_branch_alias": {
+    "name": "get_a_single_branch_alias",
+    "description": "This tool retrieves metadata and configuration details for a specified branch alias within a Contentstack stack, enabling branch management and validation operations.",
+    "mapper": {
+      "apiUrl": "/v3/stacks/branch_aliases/branch_alias_id",
+      "method": "GET",
+      "params": {
+        "branch_alias_id": "branch_alias_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["branch_alias_id"],
+      "properties": {
+        "branch_alias_id": {
+          "type": "string",
+          "description": "Select a branch alias to fetch its details.",
+          "default": ""
+        }
+      }
+    }
+  },
+  "get_single_entry_variant": {
+    "name": "get_single_entry_variant",
+    "description": "This tool retrieves a specific variant of a content entry from a designated content type, branch, and locale, using the provided entry and variant identifiers. Suitable for variant management and localization workflows.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/variants/variant_uid",
+      "method": "GET",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id",
+        "variant_uid": "variant_uid"
+      },
+      "queryParams": {
+        "locale": "locale",
+        "include_publish_details": "include_publish_details",
+        "include_rules": "include_rules",
+        "include_workflow": "include_workflow"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name", "entry_id", "variant_uid"],
+      "properties": {
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type",
+          "default": ""
+        },
+        "entry_id": {
+          "type": "string",
+          "description": "Select an entry",
+          "default": ""
+        },
+        "variant_uid": {
+          "type": "string",
+          "description": "Select a variant to fetch its details."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select a locale"
+        },
+        "include_publish_details": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_rules": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_workflow": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_global_field": {
+    "name": "get_a_single_global_field",
+    "description": "This tool retrieves metadata and configuration details for a specified global field within a Contentstack stack, supporting branch selection and optional inclusion of branch context. Keywords: global field, metadata",
+    "mapper": {
+      "apiUrl": "/v3/global_fields/global_field_uid",
+      "method": "GET",
+      "queryParams": {
+        "include_branch": "include_branch"
+      },
+      "params": {
+        "global_field_uid": "global_field_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["global_field_uid"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "global_field_uid": {
+          "type": "string",
+          "description": "Select a global field to fetch its details.",
+          "default": ""
+        },
+        "include_branch": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_variant": {
+    "name": "get_a_single_variant",
+    "description": "This tool retrieves detailed information for a specified variant within a designated Variant Group using the provided variant_id and variant_group_uid parameters. Keywords: variant, retrieval",
+    "mapper": {
+      "apiUrl": "/v3/variant_groups/variant_group_uid/variants/variant_id",
+      "method": "GET",
+      "params": {
+        "variant_group_uid": "variant_group_uid",
+        "variant_id": "variant_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["variant_id"],
+      "properties": {
+        "variant_group_uid": {
+          "type": "string",
+          "description": "Select the Variant Group from which you want to fetch the details of a single variant."
+        },
+        "variant_id": {
+          "type": "string",
+          "description": "Select a variant to fetch its details."
+        }
+      }
+    }
+  },
+  "get_a_single_term": {
+    "name": "get_a_single_term",
+    "description": "This tool retrieves detailed metadata for a specified taxonomy term, supporting optional inclusion of child term and referenced entry counts.",
+    "mapper": {
+      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms/term_uid",
+      "method": "GET",
+      "params": {
+        "taxonomy_uid": "taxonomy_uid",
+        "term_uid": "term_uid"
+      },
+      "queryParams": {
+        "include_children_count": "include_children_count",
+        "include_referenced_entries_count": "include_referenced_entries_count"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["taxonomy_uid", "term_uid"],
+      "properties": {
+        "taxonomy_uid": {
+          "type": "string",
+          "description": "Select a taxonomy to fetch the details of a single term."
+        },
+        "term_uid": {
+          "type": "string",
+          "description": "Select a term to fetch its details."
+        },
+        "include_children_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_referenced_entries_count": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_all_variants_of_a_content_type": {
+    "name": "get_all_variants_of_a_content_type",
+    "description": "This tool retrieves all variant definitions linked to the specified content type, enabling programmatic access to variant metadata for content modeling and management.",
+    "mapper": {
+      "apiUrl": "/v3/variant_groups/",
+      "method": "GET",
+      "queryParams": {
+        "content_type": "content_type_uid",
+        "include_variant_info": "include_variant_info"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_uid"],
+      "properties": {
+        "content_type_uid": {
+          "type": "string",
+          "description": "Select a content type to fetch all the variants associated with it.",
+          "default": ""
+        }
+      }
+    }
+  },
+  "get_publish_queue": {
+    "name": "get_publish_queue",
+    "description": "This tool retrieves metadata and content for all entries, both published and unpublished, within a specified stack branch, supporting query filtering, pagination, and branch selection.",
+    "mapper": {
+      "apiUrl": "/v3/publish-queue",
+      "method": "GET",
+      "queryParams": {
+        "limit": "limit",
+        "skip": "skip",
+        "include_count": "include_count"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of entries to retrieve from the stack. For example, if you set the limit to 10, then 10 entries will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of entries to skip. For example, if you set the skip value to 3, the first three entries will be skipped and the results will start with the fourth item."
+        },
+        "include_count": {
           "type": "boolean",
           "default": false
         }
