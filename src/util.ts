@@ -4,7 +4,7 @@
  */
 
 import axios from "axios";
-
+// import { tools } from "./tools.ts";
 /**
  * Interface for API endpoint mapping
  */
@@ -34,6 +34,13 @@ export const getTools = async () => {
     ...respsonse.data,
   };
 };
+
+// export const getTools = async () => {
+
+//   return {
+//     ...tools()
+//   };
+// };
 
 /**
  * Utility function to build a request for a Contentstack API endpoint

@@ -187,7 +187,7 @@
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries",
       "method": "POST",
-      "body": "entry_data",
+      "body": "entry",
       "queryParams": {
         "locale": "locale",
         "include_branch": "include_branch"
@@ -209,10 +209,6 @@
           "type": "string",
           "description": "Select a content type to create an entry.",
           "default": ""
-        },
-        "entry_data": {
-          "type": "object",
-          "description": "The fields should be wrapped by an entry object {'entry':{...data}}"
         },
         "locale": {
           "type": "string",
@@ -313,11 +309,11 @@
     "mapper": {
       "apiUrl": "/v3/taxonomies",
       "method": "POST",
-      "body": "taxonomy_data"
+      "body": "taxonomy"
     },
     "inputSchema": {
       "type": "object",
-      "required": ["uid", "name", "taxonomy_data"],
+      "required": ["uid", "name"],
       "properties": {
         "uid": {
           "type": "string",
@@ -330,10 +326,6 @@
         "description": {
           "type": "string",
           "description": "Specify a description for the taxonomy."
-        },
-        "taxonomy_data": {
-          "type": "object",
-          "description": "Enter the taxonomy data in JSON format, including UID, name, and optional description. the passed data should be in the format: { taxonomy: { uid, name, description } }"
         }
       }
     }
@@ -854,7 +846,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [],
+      "required": ["branch"],
       "properties": {
         "branch": {
           "type": "string",
@@ -918,7 +910,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": [],
+      "required": ["branch"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1243,7 +1235,10 @@
     "description": "This tool retrieves all entries referencing the specified asset within the selected branch, enabling asset dependency analysis and content relationship management.",
     "mapper": {
       "apiUrl": "/v3/assets/asset_id/references",
-      "method": "GET"
+      "method": "GET",
+      "params": {
+        "asset_id": "asset_id"
+      }
     },
     "inputSchema": {
       "type": "object",
@@ -1276,7 +1271,7 @@
       "required": ["Branch_id"],
       "properties": {
         "Branch_id": {
-          "type": "string",
+          "type": "string", 
           "description": "Select a branch to fetch its details.",
           "default": ""
         }
@@ -1507,7 +1502,10 @@
     "description": "This tool retrieves metadata and configuration details for a specified branch alias within a Contentstack stack, enabling branch management and validation operations.",
     "mapper": {
       "apiUrl": "/v3/stacks/branch_aliases/branch_alias_id",
-      "method": "GET"
+      "method": "GET",
+      "params": {
+        "branch_alias_id": "branch_alias_id"
+      }
     },
     "inputSchema": {
       "type": "object",
@@ -1564,30 +1562,23 @@
     "name": "get_single_entry_variant",
     "description": "This tool retrieves a specific variant of a content entry from a designated content type, branch, and locale, using the provided entry and variant identifiers. Suitable for variant management and localization workflows.",
     "mapper": {
-      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/variants/variant_uid",
       "method": "GET",
       "params": {
         "content_type_name": "content_type_name",
-        "entry_id": "entry_id"
+        "entry_id": "entry_id",
+        "variant_uid": "variant_uid"
       },
       "queryParams": {
         "locale": "locale",
-        "variant_group_uid": "variant_group_uid",
-        "variant_uid": "variant_uid",
-        "branch": "branch",
-        "include_access_requests": "include_access_requests",
-        "include_dimension": "include_dimension",
         "include_publish_details": "include_publish_details",
         "include_rules": "include_rules",
-        "include_workflow": "include_workflow",
-        "include_embedded_items": "include_embedded_items",
-        "include_metadata": "include_metadata",
-        "include_applied_variants": "include_applied_variants"
+        "include_workflow": "include_workflow"
       }
     },
     "inputSchema": {
       "type": "object",
-      "required": ["content_type_name", "entry_id", "locale", "variant_uid"],
+      "required": ["content_type_name", "entry_id", "variant_uid"],
       "properties": {
         "content_type_name": {
           "type": "string",
@@ -1599,10 +1590,6 @@
           "description": "Select an entry",
           "default": ""
         },
-        "variant_group_uid": {
-          "type": "string",
-          "description": "Select the Variant Group from which you want to fetch the details of a single variant entry."
-        },
         "variant_uid": {
           "type": "string",
           "description": "Select a variant to fetch its details."
@@ -1610,19 +1597,6 @@
         "locale": {
           "type": "string",
           "description": "Select a locale"
-        },
-        "branch": {
-          "type": "string",
-          "description": "Select a branch from your stack.",
-          "default": "main"
-        },
-        "include_access_requests": {
-          "type": "boolean",
-          "default": false
-        },
-        "include_dimension": {
-          "type": "boolean",
-          "default": false
         },
         "include_publish_details": {
           "type": "boolean",
@@ -1633,18 +1607,6 @@
           "default": false
         },
         "include_workflow": {
-          "type": "boolean",
-          "default": false
-        },
-        "include_embedded_items": {
-          "type": "boolean",
-          "default": false
-        },
-        "include_metadata": {
-          "type": "boolean",
-          "default": false
-        },
-        "include_applied_variants": {
           "type": "boolean",
           "default": false
         }
@@ -1944,7 +1906,7 @@
     "name": "publish_an_entry",
     "description": "This tool publishes a specified entry from a selected content type to one or more environments and locales within a designated branch of the stack. Content publishing, environments",
     "mapper": {
-      "apiUrl": "/v3/bulk/publish",
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_uid/publish",
       "method": "POST",
       "body": "body",
       "queryParams": {
@@ -1954,7 +1916,7 @@
     },
     "inputSchema": {
       "type": "object",
-      "required": ["content_type_name", "entry", "environments", "locales"],
+      "required": ["content_type_name", "entry_uid", "environments", "locales"],
       "properties": {
         "branch": {
           "type": "string",
@@ -1966,9 +1928,9 @@
           "description": "Select a content type to publish the entry.",
           "default": ""
         },
-        "entry": {
+        "entry_uid": {
           "type": "string",
-          "description": "Select an entry to publish.",
+          "description": "Select an entry's uid to publish.",
           "default": ""
         },
         "locales": {
