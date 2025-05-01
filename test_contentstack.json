@@ -163,7 +163,8 @@
     "mapper": {
       "apiUrl": "/v3/stacks/branches",
       "method": "POST",
-      "body": "branch_data"
+      "body": "branch_data",
+      "wrapKeyword": "branch"
     },
     "inputSchema": {
       "type": "object",

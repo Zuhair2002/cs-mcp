@@ -30,19 +30,14 @@ export type ToolData = Record<string, Tool>;
 
 export const getTools = async () => {
   const fileUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/add-api-file/test_contentstack.json";
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/dynamic-body/test_contentstack.json";
   const respsonse = await axios.get(fileUrl);
   return {
     ...respsonse.data,
   };
 };
 
-/**
- * Utility function to build a request for a Contentstack API endpoint
- * @param actionMapper The normalized Api Endpoint Mapping
- * @param args Arguments provided by the user
- * @returns Request configuration for axios
- */
+
 export function buildContentstackRequest(
   actionMapper: ApiEndpointMapping,
   args: Record<string, any>
@@ -76,7 +71,7 @@ export function buildContentstackRequest(
   else {
     const bodyKey = actionMapper.body;
     if (typeof bodyKey === "string") {
-      const wrapper = actionMapper.wrapKeyword ?? bodyKey;
+      const wrapper = actionMapper?.wrapKeyword ?? bodyKey;
 
       const consumed = new Set<string>([
         ...Object.values(actionMapper.params ?? {}),
