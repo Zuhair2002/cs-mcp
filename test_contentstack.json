@@ -1,98 +1,4 @@
 {
-  "get_a_single_merge_job": {
-    "name": "get_a_single_merge_job",
-    "description": "This tool retrieves detailed information for a specified merge job within a stack, using the provided merge_job_uid parameter. Keywords: merge job, stack.",
-    "mapper": {
-      "apiUrl": "/v3/stacks/branches_queue/merge_job_uid",
-      "method": "GET"
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "merge_job_uid"
-      ],
-      "properties": {
-        "merge_job_uid": {
-          "type": "string",
-          "description": "Select a merge job to fetch its details.",
-          "default": ""
-        }
-      }
-    }
-  },
-  "import_a_taxonomy": {
-    "name": "import_a_taxonomy",
-    "description": "This tool imports a taxonomy and its associated terms into the target stack using the specified data format and payload.",
-    "mapper": {
-      "apiUrl": "/v3/taxonomies/import",
-      "method": "POST",
-      "body": "formData"
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "format",
-        "body"
-      ],
-      "properties": {
-        "format": {
-          "type": "string",
-          "description": "Select the format in which you want to import the taxonomy.",
-          "default": "json"
-        },
-        "body": {
-          "type": "string",
-          "description": "Specify the data in JSON or CSV format to import."
-        }
-      }
-    }
-  },
-  "merge_branch": {
-    "name": "merge_branch",
-    "description": "This tool merges content types and global fields from the specified compare (source) branch into the designated base (target) branch using the selected merge strategy.",
-    "mapper": {
-      "apiUrl": "/v3/stacks/branches_merge",
-      "method": "POST",
-      "body": "merging_data",
-      "type":"complex",
-      "queryParams": {
-        "base_branch": "base_branch",
-        "compare_branch": "compare_branch",
-        "default_merge_strategy": "merge_strategy",
-        "merge_comment": "merge_comment"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "base_branch",
-        "compare_branch",
-        "merge_strategy",
-        "merge_comment"
-      ],
-      "properties": {
-        "compare_branch": {
-          "type": "string",
-          "description": "Select a compare (source) branch to copy the content types and global fields.",
-          "default": ""
-        },
-        "base_branch": {
-          "type": "string",
-          "description": "Select a base (target) branch in which you want to merge the data from the compare branch.",
-          "default": "main"
-        },
-        "merge_strategy": {
-          "type": "string",
-          "description": "Select a merge strategy to merge the branch.",
-          "default": "ignore"
-        },
-        "merge_comment": {
-          "type": "string",
-          "description": "Specify additional descriptive comment(s) for the merge action. The specified comments can be fetched via the ‘Get a Single Merge Job’ action for future reference."
-        }
-      }
-    }
-  },
   "publish_an_asset": {
     "name": "publish_an_asset",
     "description": "This tool publishes a specified asset from a selected branch to one or more environments and locales within a stack, with optional scheduling for future deployment. Keywords: asset publishing, environment.",
@@ -134,7 +40,7 @@
           }
         }
       },
-      "type":"complex",
+      "type": "complex",
       "params": {
         "asset": "asset"
       }
@@ -172,6 +78,95 @@
       }
     }
   },
+  "remove_localization": {
+    "name": "remove_localization",
+    "description": "This tool removes the localized version of a specified entry in a given locale, restoring the entry to its original non-localized state within the selected branch and content type. Keywords: localization, revert.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/unlocalize",
+      "method": "POST",
+      "queryParams": {
+        "locale": "locale"
+      },
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "content_type_name",
+        "entry_id",
+        "locale"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to remove the localized version of the entry.",
+          "default": ""
+        },
+        "entry_id": {
+          "type": "string",
+          "description": "Select an entry to restore to its original non-localized state.",
+          "default": ""
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select a locale (language) to remove the entry's localization in the selected locale. The entry must be localized in the selected locale."
+        }
+      }
+    }
+  },
+  "unpublish_asset": {
+    "name": "unpublish_asset",
+    "description": "This tool unpublishes a specified asset from selected environments and locales within a given branch, with optional scheduling for deferred execution.",
+    "mapper": {
+      "apiUrl": "/v3/assets/asset/unpublish",
+      "method": "POST",
+      "body": "body",
+      "type": "complex",
+      "params": {
+        "asset": "asset"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "asset",
+        "environments"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "asset": {
+          "type": "string",
+          "description": "Select an asset which you want to unpublish.",
+          "default": ""
+        },
+        "environments": {
+          "type": "string",
+          "description": "Select an environment to unpublish the asset.",
+          "default": ""
+        },
+        "locales": {
+          "type": "string",
+          "description": "Select the locale in which the asset should be unpublished."
+        },
+        "scheduled_at": {
+          "type": "string",
+          "description": "Schedule the asset unpublish in ‘YYYY-MM-DD HH:MM:SS’ format."
+        }
+      }
+    }
+  },
   "publish_an_entry": {
     "name": "publish_an_entry",
     "description": "This tool publishes a specified entry from a selected content type to one or more environments and locales within a designated branch of the stack. Content publishing, environments",
@@ -179,7 +174,7 @@
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_uid/publish",
       "method": "POST",
       "body": "body",
-      "type":"complex",
+      "type": "complex",
       "queryParams": {
         "publish_with_reference": "publish_with_reference",
         "x-bulk-action": "x-bulk-action"
@@ -263,7 +258,7 @@
                     "uid": {
                       "type": "string",
                       "x-mapFrom": "variant_ids"
-                    },
+                    }
                   }
                 }
               },
@@ -290,7 +285,7 @@
           }
         }
       },
-      "type":"complex",
+      "type": "complex",
       "params": {
         "content_type_name": "content_type_name",
         "entry": "entry"
@@ -353,49 +348,6 @@
         "publish_latest_base_conditionally": {
           "type": "boolean",
           "default": false
-        }
-      }
-    }
-  },
-  "delete_items_from_a_release": {
-    "name": "delete_items_from_a_release",
-    "description": "This tool programmatically removes specified content items from a designated release within a Contentstack stack branch, requiring the release identifier and item data in JSON format for precise targeting and execution.",
-    "mapper": {
-      "apiUrl": "/v3/releases/release_id/items",
-      "method": "DELETE",
-      "body": "item_data",
-      "queryParams": {
-        "include_branch": "include_branch",
-        "all": "all"
-      },
-      "params": {
-        "release_id": "release_id"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "release_id",
-        "item_data"
-      ],
-      "properties": {
-        "branch": {
-          "type": "string",
-          "description": "Select a branch from your stack.",
-          "default": "main"
-        },
-        "release_id": {
-          "type": "string",
-          "description": "Select a release from which you want to remove an item.",
-          "default": ""
-        },
-        "item_data": {
-          "type": "string",
-          "description": "Enter the item data in JSON format.",
-          "default": "{\n        \"items\": [\n          {\n            \"uid\": \"entry_uid\",\n            \"version\": 1,\n            \"locale\": \"en-us\",\n            \"content_type_uid\": \"demo\",\n            \"action\": \"publish\"\n          },\n          {\n            \"uid\": \"asset_uid\",\n            \"version\": 1,\n            \"locale\": \"en-us\",\n            \"content_type_uid\": \"built_io_upload\",\n            \"action\": \"publish\"\n          }\n        ]\n      }"
-        },
-        "include_branch": {
-          "type": "boolean"
         }
       }
     }
@@ -481,7 +433,7 @@
           }
         }
       },
-      "type":"complex",
+      "type": "complex",
       "params": {
         "content_type_name": "content_type_name",
         "entry_id": "entry_id"
@@ -547,95 +499,6 @@
       }
     }
   },
-  "remove_localization": {
-    "name": "remove_localization",
-    "description": "This tool removes the localized version of a specified entry in a given locale, restoring the entry to its original non-localized state within the selected branch and content type. Keywords: localization, revert.",
-    "mapper": {
-      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/unlocalize",
-      "method": "POST",
-      "queryParams": {
-        "locale": "locale"
-      },
-      "params": {
-        "content_type_name": "content_type_name",
-        "entry_id": "entry_id"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "content_type_name",
-        "entry_id",
-        "locale"
-      ],
-      "properties": {
-        "branch": {
-          "type": "string",
-          "description": "Select a branch from your stack.",
-          "default": "main"
-        },
-        "content_type_name": {
-          "type": "string",
-          "description": "Select a content type to remove the localized version of the entry.",
-          "default": ""
-        },
-        "entry_id": {
-          "type": "string",
-          "description": "Select an entry to restore to its original non-localized state.",
-          "default": ""
-        },
-        "locale": {
-          "type": "string",
-          "description": "Select a locale (language) to remove the entry's localization in the selected locale. The entry must be localized in the selected locale."
-        }
-      }
-    }
-  },
-  "unpublish_asset": {
-    "name": "unpublish_asset",
-    "description": "This tool unpublishes a specified asset from selected environments and locales within a given branch, with optional scheduling for deferred execution.",
-    "mapper": {
-      "apiUrl": "/v3/assets/asset/unpublish",
-      "method": "POST",
-      "body": "body",
-      "type":"complex",
-      "params": {
-        "asset": "asset"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "asset",
-        "environments"
-      ],
-      "properties": {
-        "branch": {
-          "type": "string",
-          "description": "Select a branch from your stack.",
-          "default": "main"
-        },
-        "asset": {
-          "type": "string",
-          "description": "Select an asset which you want to unpublish.",
-          "default": ""
-        },
-        "environments": {
-          "type": "string",
-          "description": "Select an environment to unpublish the asset.",
-          "default": ""
-        },
-        "locales": {
-          "type": "string",
-          "description": "Select the locale in which the asset should be unpublished."
-        },
-        "scheduled_at": {
-          "type": "string",
-          "description": "Schedule the asset unpublish in ‘YYYY-MM-DD HH:MM:SS’ format."
-        }
-      }
-    }
-  },
   "unpublish_an_entry": {
     "name": "unpublish_an_entry",
     "description": "This tool unpublishes a specified entry from selected environments and locales within a Contentstack stack branch, removing the entry from the CDN and making it inaccessible via delivery APIs. Keywords: unpublish, entry",
@@ -643,7 +506,7 @@
       "apiUrl": "/v3/content_types/content_type_name/entries/entry/unpublish",
       "method": "POST",
       "body": "body",
-      "type":"complex",
+      "type": "complex",
       "params": {
         "content_type_name": "content_type_name",
         "entry": "entry"
@@ -684,75 +547,6 @@
         "scheduled_at": {
           "type": "string",
           "description": "When left blank, the unpublish schedule is set to \"now.\" You may also enter a UTC time in \"YYYY-MM-DD HH:MM:SS\" format."
-        }
-      }
-    }
-  },
-  "update_a_taxonomy": {
-    "name": "update_a_taxonomy",
-    "description": "This tool updates the name and description fields of a specified taxonomy entity using its unique identifier. Keywords: taxonomy, update",
-    "mapper": {
-      "apiUrl": "/v3/taxonomies/taxonomy_uid",
-      "method": "PUT",
-      "body": "body",
-      "params": {
-        "taxonomy_uid": "taxonomy_uid"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "name",
-        "description"
-      ],
-      "properties": {
-        "taxonomy_uid": {
-          "type": "string",
-          "description": "Select a taxonomy to update."
-        },
-        "name": {
-          "type": "string",
-          "description": "Specify a title for the taxonomy."
-        },
-        "description": {
-          "type": "string",
-          "description": "Specify a description for the taxonomy."
-        }
-      }
-    }
-  },
-  "update_a_term": {
-    "name": "update_a_term",
-    "description": "This tool updates the name property of a specified term within a taxonomy using the provided taxonomy_uid and term_uid identifiers.",
-    "mapper": {
-      "apiUrl": "/v3/taxonomies/taxonomy_uid/terms/term_uid",
-      "method": "PUT",
-      "body": "body",
-      "params": {
-        "taxonomy_uid": "taxonomy_uid",
-        "term_uid": "term_uid"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "taxonomy_uid",
-        "term_uid",
-        "name"
-      ],
-      "properties": {
-        "taxonomy_uid": {
-          "type": "string",
-          "description": "Select a taxonomy to update the term."
-        },
-        "term_uid": {
-          "type": "string",
-          "description": "Select a term to update."
-        },
-        "name": {
-          "type": "string",
-          "description": "Specify a title to update the term."
         }
       }
     }
