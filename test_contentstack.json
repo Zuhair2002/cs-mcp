@@ -93,6 +93,95 @@
       }
     }
   },
+  "unpublish_an_entry": {
+    "name": "unpublish_an_entry",
+    "description": "This tool unpublishes a specified entry from selected environments and locales within a Contentstack stack branch, removing the entry from the CDN and making it inaccessible via delivery APIs. Keywords: unpublish, entry",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry/unpublish",
+      "method": "POST",
+      "body": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "type": "object",
+            "properties": {
+              "environments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "environment_uids"
+              },
+              "locales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "locales"
+              }
+            }
+          },
+          "locale": {
+            "type": "string",
+            "x-mapFrom": "locales"
+          },
+          "version": {
+            "type": "number",
+            "x-mapFrom": "version"
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time",
+            "optional": true,
+            "x-mapFrom": "scheduled_at"
+          }
+        }
+      },
+      "type": "complex",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry": "entry"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "content_type_name",
+        "entry",
+        "environment_uids"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to unpublish the entry.",
+          "default": ""
+        },
+        "entry": {
+          "type": "string",
+          "description": "Select an entry to unpublish.",
+          "default": ""
+        },
+        "environment_uids": {
+          "type": "string",
+          "description": "Select the environment(s) from where you want to unpublish the entry.",
+          "default": ""
+        },
+        "locales": {
+          "type": "string",
+          "description": "Select the locale(s) to unpublish the entry in that locale."
+        },
+        "scheduled_at": {
+          "type": "string",
+          "description": "When left blank, the unpublish schedule is set to \"now.\" You may also enter a UTC time in \"YYYY-MM-DD HH:MM:SS\" format."
+        }
+      }
+    }
+  },
   "publish_variants_of_an_entry": {
     "name": "publish_variants_of_an_entry",
     "description": "This tool publishes specified entry variants to selected environments and locales within a defined branch, supporting variant group targeting for content type entries. Keywords: publish, variants",
