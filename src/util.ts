@@ -12,6 +12,7 @@ import axios from "axios";
 export interface ApiEndpointMapping {
   apiUrl: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
+  type?: "simple" | "complex"; // Type of the API endpoint
   body?: string; // The parameter name containing the request body
   queryParams?: Record<string, string>; // Maps query param names to argument names
   params?: Record<string, string>; // Maps URL param names to argument names
@@ -69,28 +70,31 @@ export function buildContentstackRequest(
   let body: any = undefined;
 
   if (actionMapper.body) {
-    const bodyKey = actionMapper.body;              
+    if (actionMapper.type === "complex") {
+      body = buildBodyPayload(actionMapper.body, args);
+    } else {
+      const bodyKey = actionMapper.body;
 
-    if (args[bodyKey] !== undefined) {
-      body = args[bodyKey];
+      if (args[bodyKey] !== undefined) {
+        body = args[bodyKey];
+      } else if (typeof bodyKey === "string") {
+        const wrapper = bodyKey;
 
-    } else if (typeof bodyKey === "string") {
-      const wrapper = bodyKey
+        const consumed = new Set<string>([
+          ...Object.values(actionMapper.params ?? {}),
+          ...Object.values(actionMapper.queryParams ?? {}),
+        ]);
 
-      const consumed = new Set<string>([
-        ...Object.values(actionMapper.params ?? {}),
-        ...Object.values(actionMapper.queryParams ?? {}),
-      ]);
+        const wrapped: Record<string, any> = {};
+        Object.entries(args).forEach(([k, v]) => {
+          if (!consumed.has(k)) {
+            wrapped[k] = v;
+          }
+        });
 
-      const wrapped: Record<string, any> = {};
-      Object.entries(args).forEach(([k, v]) => {
-        if (!consumed.has(k)) {
-          wrapped[k] = v;              
+        if (Object.keys(wrapped).length > 0) {
+          body = { [wrapper]: wrapped };
         }
-      });
-
-      if (Object.keys(wrapped).length > 0) {
-        body = { [wrapper]: wrapped }; 
       }
     }
   }
@@ -104,4 +108,64 @@ export function buildContentstackRequest(
     data: body,
     params: Object.keys(queryParams).length ? queryParams : undefined,
   };
+}
+
+export function buildBodyPayload(schema: any, data: any) {
+  if (schema.type === "object") {
+    const result: any = {};
+    for (const key in schema.properties) {
+      const value = buildBodyPayload(schema.properties[key], data);
+      if (value !== undefined) {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+
+  if (schema.type === "array") {
+    if (schema.items.type === "object") {
+      const result: any = {};
+      for (const key in schema.items.properties) {
+        const value = buildBodyPayload(schema.items.properties[key], data);
+        if (value !== undefined) result[key] = value;
+      }
+
+      if (schema.optional && Object.keys(result).length === 0) {
+        return;
+      }
+      return result;
+    } else {
+      const sourceKey = schema["x-mapFrom"];
+      const value = data[sourceKey];
+      if (value !== undefined) {
+        if (Array.isArray(value)) {
+          return value;
+        } else {
+          return [value];
+        }
+      }
+      if ("default" in schema) return schema.default;
+      if (schema.optional) return undefined;
+      return [];
+    }
+  }
+
+  const sourceKey = schema["x-mapFrom"];
+  if (sourceKey && data[sourceKey] !== undefined) {
+    if (Array.isArray(data[sourceKey])) {
+      let val = data[sourceKey][0];
+      return val;
+    }
+    return data[sourceKey];
+  }
+
+  if ("default" in schema) {
+    return schema.default;
+  }
+
+  if (schema.optional) {
+    return undefined;
+  }
+
+  return;
 }
