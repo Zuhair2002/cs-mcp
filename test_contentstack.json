@@ -54,6 +54,7 @@
       "apiUrl": "/v3/stacks/branches_merge",
       "method": "POST",
       "body": "merging_data",
+      "type":"complex",
       "queryParams": {
         "base_branch": "base_branch",
         "compare_branch": "compare_branch",
@@ -99,6 +100,7 @@
       "apiUrl": "/v3/assets/asset/publish",
       "method": "POST",
       "body": "body",
+      "type":"complex",
       "params": {
         "asset": "asset"
       }
@@ -143,6 +145,7 @@
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_uid/publish",
       "method": "POST",
       "body": "body",
+      "type":"complex",
       "queryParams": {
         "publish_with_reference": "publish_with_reference",
         "x-bulk-action": "x-bulk-action"
@@ -199,6 +202,7 @@
       "apiUrl": "/v3/content_types/content_type_name/entries/entry/publish",
       "method": "POST",
       "body": "body",
+      "type":"complex",
       "params": {
         "content_type_name": "content_type_name",
         "entry": "entry"
@@ -315,6 +319,7 @@
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/workflow",
       "method": "POST",
       "body": "workflowBody",
+      "type":"complex",
       "params": {
         "content_type_name": "content_type_name",
         "entry_id": "entry_id"
@@ -431,6 +436,7 @@
       "apiUrl": "/v3/assets/asset/unpublish",
       "method": "POST",
       "body": "body",
+      "type":"complex",
       "params": {
         "asset": "asset"
       }
@@ -475,6 +481,7 @@
       "apiUrl": "/v3/content_types/content_type_name/entries/entry/unpublish",
       "method": "POST",
       "body": "body",
+      "type":"complex",
       "params": {
         "content_type_name": "content_type_name",
         "entry": "entry"
@@ -515,55 +522,6 @@
         "scheduled_at": {
           "type": "string",
           "description": "When left blank, the unpublish schedule is set to \"now.\" You may also enter a UTC time in \"YYYY-MM-DD HH:MM:SS\" format."
-        }
-      }
-    }
-  },
-  "update_an_asset": {
-    "name": "update_an_asset",
-    "description": "This tool updates metadata or content of a single asset in a specified stack branch by asset ID, supporting modifications to title, description, file name, source URL, and folder assignment. Asset management, update.",
-    "mapper": {
-      "apiUrl": "/v3/assets/asset_id",
-      "method": "PUT",
-      "body": "data",
-      "params": {
-        "asset_id": "asset_id"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "asset_id"
-      ],
-      "properties": {
-        "branch": {
-          "type": "string",
-          "description": "Select a branch from your stack.",
-          "default": "main"
-        },
-        "asset_id": {
-          "type": "string",
-          "description": " Select an asset to update."
-        },
-        "title": {
-          "type": "string",
-          "description": "Specify a title for the asset."
-        },
-        "description": {
-          "type": "string",
-          "description": "Specify a description for the asset."
-        },
-        "key": {
-          "type": "string",
-          "description": "Specify a file name for the asset."
-        },
-        "body": {
-          "type": "string",
-          "description": "Specify an input URL to update an asset."
-        },
-        "folder_id": {
-          "type": "string",
-          "description": "Select a folder to update an asset in it."
         }
       }
     }
@@ -633,59 +591,6 @@
         "name": {
           "type": "string",
           "description": "Specify a title to update the term."
-        }
-      }
-    }
-  },
-  "update_a_variant_of_an_entry": {
-    "name": "update_a_variant_of_an_entry",
-    "description": "This tool updates the content fields of a specified entry variant within a Variant Group for a given content type, applying the provided changeset to the targeted entry in Contentstack. Keywords: entry update, variant group.",
-    "mapper": {
-      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/variants/variant_id",
-      "method": "PUT",
-      "body": "entry_data",
-      "params": {
-        "content_type_name": "content_type_name",
-        "entry_id": "entry_id",
-        "variant_id": "variant_id"
-      }
-    },
-    "inputSchema": {
-      "type": "object",
-      "required": [
-        "variant_group_uid",
-        "variant_id",
-        "content_type_name",
-        "entry_id",
-        "entry_data",
-        "changeset"
-      ],
-      "properties": {
-        "content_type_name": {
-          "type": "string",
-          "description": "Select a content type to update the entry's variant.",
-          "default": ""
-        },
-        "entry_id": {
-          "type": "string",
-          "description": "Select an entry to update its variant.",
-          "default": ""
-        },
-        "variant_group_uid": {
-          "type": "string",
-          "description": "Select the Variant Group to update the variant."
-        },
-        "variant_id": {
-          "type": "string",
-          "description": "Select a variant to update its content."
-        },
-        "entry_data": {
-          "type": "object",
-          "description": "The fields should be wrapped by an entry object {'entry':{...data}}"
-        },
-        "changeset": {
-          "type": "string",
-          "description": "Enter the change set data in JSON format to update the variant content."
         }
       }
     }
