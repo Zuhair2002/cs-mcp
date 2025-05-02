@@ -29,7 +29,7 @@
           },
           "locale": {
             "type": "string",
-            "x-mapFrom": "locales"
+            "x-mapFrom": "master_locale"
           },
           "version": {
             "type": "number",
@@ -55,7 +55,8 @@
         "content_type_name",
         "entry_uid",
         "environment_uids",
-        "locales"
+        "locales",
+        "master_locale"
       ],
       "properties": {
         "branch": {
@@ -76,6 +77,10 @@
         "locales": {
           "type": "string",
           "description": "Select the locale(s) in which you want to publish the entry."
+        },
+        "master_locale": {
+          "type": "string",
+          "description": "Select the master locale in which you want to publish the entry."
         },
         "environment_uids": {
           "type": "string",
@@ -123,7 +128,7 @@
           },
           "locale": {
             "type": "string",
-            "x-mapFrom": "locales"
+            "x-mapFrom": "master_locale"
           },
           "version": {
             "type": "number",
@@ -148,7 +153,8 @@
       "required": [
         "content_type_name",
         "entry",
-        "environment_uids"
+        "environment_uids",
+        "master_locale"
       ],
       "properties": {
         "branch": {
@@ -174,6 +180,10 @@
         "locales": {
           "type": "string",
           "description": "Select the locale(s) to unpublish the entry in that locale."
+        },
+        "master_locale": {
+          "type": "string",
+          "description": "Select the master locale to unpublish the entry."
         },
         "scheduled_at": {
           "type": "string",
