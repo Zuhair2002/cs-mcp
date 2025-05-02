@@ -99,7 +99,41 @@
     "mapper": {
       "apiUrl": "/v3/assets/asset/publish",
       "method": "POST",
-      "body": "body",
+      "body": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "object",
+            "properties": {
+              "locales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "locales"
+              },
+              "environments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "environments"
+              }
+            }
+          },
+          "version": {
+            "type": "number",
+            "x-mapFrom": "version",
+            "optional": true
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time",
+            "x-mapFrom": "scheduled_at",
+            "optional": true
+          }
+        }
+      },
       "type":"complex",
       "params": {
         "asset": "asset"
@@ -201,7 +235,61 @@
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry/publish",
       "method": "POST",
-      "body": "body",
+      "body": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "type": "object",
+            "properties": {
+              "environments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "environments"
+              },
+              "locales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "locales"
+              },
+              "variants": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "uid": {
+                      "type": "string",
+                      "x-mapFrom": "variant_ids"
+                    },
+                  }
+                }
+              },
+              "variant_rules": {
+                "type": "object",
+                "properties": {
+                  "publish_latest_base": {
+                    "type": "boolean",
+                    "x-mapFrom": "publish_latest_base",
+                    "default": false
+                  },
+                  "publish_latest_base_conditionally": {
+                    "type": "boolean",
+                    "x-mapFrom": "publish_latest_base_conditionally",
+                    "default": true
+                  }
+                }
+              }
+            }
+          },
+          "locale": {
+            "type": "string",
+            "x-mapFrom": "locales"
+          }
+        }
+      },
       "type":"complex",
       "params": {
         "content_type_name": "content_type_name",
@@ -318,7 +406,81 @@
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id/workflow",
       "method": "POST",
-      "body": "workflowBody",
+      "body": {
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "type": "object",
+            "properties": {
+              "workflow_stage": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "x-mapFrom": "comment",
+                    "optional": true
+                  },
+                  "due_date": {
+                    "type": "string",
+                    "x-mapFrom": "due_date",
+                    "optional": true
+                  },
+                  "notify": {
+                    "type": "boolean",
+                    "x-mapFrom": "notify",
+                    "default": false,
+                    "optional": true
+                  },
+                  "uid": {
+                    "type": "string",
+                    "x-mapFrom": "workflow_stage_uid"
+                  },
+                  "assigned_to": {
+                    "type": "array",
+                    "x-mapFrom": "assigned_to",
+                    "optional": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "uid": {
+                          "type": "string",
+                          "x-mapFrom": "uid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "x-mapFrom": "name"
+                        },
+                        "email": {
+                          "type": "string",
+                          "x-mapFrom": "email"
+                        }
+                      }
+                    }
+                  },
+                  "assigned_by_roles": {
+                    "type": "array",
+                    "x-mapFrom": "assigned_by_roles",
+                    "optional": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "uid": {
+                          "type": "string",
+                          "x-mapFrom": "uid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "x-mapFrom": "name"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "type":"complex",
       "params": {
         "content_type_name": "content_type_name",
