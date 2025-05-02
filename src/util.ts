@@ -135,7 +135,6 @@ export function buildBodyPayload(schema: any, data: any) {
       }
       return result;
     } else {
-      console.log(schema["x-mapFrom"]);
       const sourceKey = schema["x-mapFrom"];
       const value = data[sourceKey];
       if (value !== undefined) {
