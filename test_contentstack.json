@@ -55,8 +55,7 @@
         "content_type_name",
         "entry_uid",
         "environment_uids",
-        "locales",
-        "master_locale"
+        "locales"
       ],
       "properties": {
         "branch": {
@@ -80,7 +79,7 @@
         },
         "master_locale": {
           "type": "string",
-          "description": "Select the master locale in which you want to publish the entry."
+          "description": "Select the master locale in which you want to publish the entry. You can get this locale from the get_single_entry tool. There you can find the locale key. Call the get_single_entry tool to get the master locale."
         },
         "environment_uids": {
           "type": "string",
