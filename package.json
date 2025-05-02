@@ -1,6 +1,6 @@
 {
   "name": "@zuhair-cs/cs-mcp",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "./dist/bundle.js",
   "type": "module",
   "publishConfig": {
