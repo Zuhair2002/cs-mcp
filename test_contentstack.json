@@ -55,7 +55,8 @@
         "content_type_name",
         "entry_uid",
         "environment_uids",
-        "locales"
+        "locales",
+        "master_locale"
       ],
       "properties": {
         "branch": {
@@ -152,7 +153,9 @@
       "required": [
         "content_type_name",
         "entry",
-        "environment_uids"
+        "environment_uids",
+        "locales",
+        "master_locale"
       ],
       "properties": {
         "branch": {
