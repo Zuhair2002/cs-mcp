@@ -44,7 +44,7 @@
         }
       },
       "type": "complex",
-      "queryParams": {
+      "params": {
         "content_type_name": "content_type_name",
         "entry_uid": "entry_uid"
       }
