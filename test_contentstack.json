@@ -152,8 +152,7 @@
       "required": [
         "content_type_name",
         "entry",
-        "environment_uids",
-        "master_locale"
+        "environment_uids"
       ],
       "properties": {
         "branch": {
@@ -182,7 +181,7 @@
         },
         "master_locale": {
           "type": "string",
-          "description": "Select the master locale to unpublish the entry."
+          "description": "Select the master locale in which you want to publish the entry. You can get this locale from the get_single_entry tool. There you can find the locale key. Call the get_single_entry tool to get the master locale."
         },
         "scheduled_at": {
           "type": "string",
@@ -289,7 +288,7 @@
         },
         "variant_ids": {
           "type": "string",
-          "description": "Select the variant(s) to publish its content. You can select multiple variants."
+          "description": "Select the variant(s) to publish its content. You can select multiple variants. If variant name is provided then get the variant id by calling the get_all_variants_of_a_content_type tool and then match the variant name with the id."
         },
         "locales": {
           "type": "string",
@@ -297,7 +296,7 @@
         },
         "environment_uids": {
           "type": "string",
-          "description": "Select the environment(s) in which you want to publish the entry’s variant. You can select multiple environments.",
+          "description": "Select the environment(s) in which you want to publish the entry’s variant. You can select multiple environments. You can get the environment uid from the get_all_environments tool. There you can find the uid key. Call the get_all_environments tool to get the environment uid.",
           "default": ""
         },
         "scheduled_at": {
