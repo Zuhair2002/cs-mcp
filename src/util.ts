@@ -105,3 +105,68 @@ export function buildContentstackRequest(
     params: Object.keys(queryParams).length ? queryParams : undefined,
   };
 }
+
+
+export function buildPayload(schema: any, data: any) {
+  if (schema.type === 'object') {
+    const result: any = {};
+    for (const key in schema.properties) {
+      const value = buildPayload(schema.properties[key], data);
+      if (value !== undefined) {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+
+  if (schema.type === 'array') {
+    if (schema.items.type === 'object') {
+      const result: any = {};
+      for (const key in schema.items.properties) {
+        const value = buildPayload(schema.items.properties[key], data);
+        if (value !== undefined) result[key] = value;
+      }
+
+      if (schema.optional && Object.keys(result).length === 0) {
+        return;
+      }
+      return result;
+    }
+    else {
+      console.log(schema['x-mapFrom'])
+      const sourceKey = schema['x-mapFrom'];
+      const value = data[sourceKey];
+      if (value !== undefined) {
+        if (Array.isArray(value)) {
+          return value;
+        }
+        else {
+          return [value]
+        }
+      }
+      if ('default' in schema) return schema.default;
+      if (schema.optional) return undefined;
+      return [];
+    }
+
+  }
+
+  const sourceKey = schema['x-mapFrom'];
+  if (sourceKey && data[sourceKey] !== undefined) {
+    if (Array.isArray(data[sourceKey])) {
+      let val = data[sourceKey][0];
+      return val;
+    }
+    return data[sourceKey];
+  }
+
+  if ('default' in schema) {
+    return schema.default;
+  }
+
+  if (schema.optional) {
+    return undefined;
+  }
+
+  return
+}
