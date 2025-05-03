@@ -14,6 +14,16 @@ import { buildContentstackRequest, getTools } from "./util.ts";
  * @param options Configuration options
  * @returns An MCP server instance
  */
+
+ type ApiVersionHeaders = "publish_variants_of_an_entry" | "publish_an_entry" | "unpublish_an_entry";
+
+const apiVersionHeaders: ApiVersionHeaders[] = [
+  "publish_variants_of_an_entry",
+  "publish_an_entry",
+  "unpublish_an_entry",
+];
+
+
 export function createContentstackMCPServer(options: {
   apiKey: string;
   managementToken: string;
@@ -64,7 +74,7 @@ export function createContentstackMCPServer(options: {
       }
 
       // Build request configuration
-      const requestConfig = buildContentstackRequest(mapper, args);
+      let requestConfig:any = buildContentstackRequest(mapper, args);
 
       // Add authentication headers
       requestConfig.headers = {
@@ -72,6 +82,10 @@ export function createContentstackMCPServer(options: {
         api_key: apiKey,
         authorization: managementToken,
       };
+
+      if(apiVersionHeaders.includes(name as ApiVersionHeaders)) {
+        requestConfig.headers["api_version"] = "3.2";
+      }
 
       let response;
       try {

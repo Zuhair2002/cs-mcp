@@ -29,7 +29,7 @@ export type ToolData = Record<string, Tool>;
 
 export const getTools = async () => {
   const fileUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/contentstack.json";
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/test-copy/test_contentstack.json";
   const respsonse = await axios.get(fileUrl);
   return {
     ...respsonse.data,
@@ -110,8 +110,8 @@ export function buildContentstackRequest(
   };
 }
 
-export function buildBodyPayload(schema: any, data: any) {
-  if (schema.type === "object") {
+function buildBodyPayload(schema: any, data: any) {
+  if (schema.type === 'object') {
     const result: any = {};
     for (const key in schema.properties) {
       const value = buildBodyPayload(schema.properties[key], data);
@@ -122,35 +122,45 @@ export function buildBodyPayload(schema: any, data: any) {
     return result;
   }
 
-  if (schema.type === "array") {
-    if (schema.items.type === "object") {
-      const result: any = {};
+  if (schema.type === 'array') {
+
+    if (schema.items.type === 'object') {
+      const result: any = [];
       for (const key in schema.items.properties) {
         const value = buildBodyPayload(schema.items.properties[key], data);
-        if (value !== undefined) result[key] = value;
+        if (value !== undefined) {
+          let newObj = {
+            [key]: value
+          }
+          result.push(newObj)
+        }
+
       }
 
       if (schema.optional && Object.keys(result).length === 0) {
         return;
       }
       return result;
-    } else {
-      const sourceKey = schema["x-mapFrom"];
+    }
+    else {
+      console.log(schema['x-mapFrom'])
+      const sourceKey = schema['x-mapFrom'];
       const value = data[sourceKey];
       if (value !== undefined) {
         if (Array.isArray(value)) {
           return value;
-        } else {
-          return [value];
+        }
+        else {
+          return [value]
         }
       }
-      if ("default" in schema) return schema.default;
+      if ('default' in schema) return schema.default;
       if (schema.optional) return undefined;
       return [];
     }
   }
 
-  const sourceKey = schema["x-mapFrom"];
+  const sourceKey = schema['x-mapFrom'];
   if (sourceKey && data[sourceKey] !== undefined) {
     if (Array.isArray(data[sourceKey])) {
       let val = data[sourceKey][0];
@@ -159,7 +169,7 @@ export function buildBodyPayload(schema: any, data: any) {
     return data[sourceKey];
   }
 
-  if ("default" in schema) {
+  if ('default' in schema) {
     return schema.default;
   }
 
@@ -167,5 +177,5 @@ export function buildBodyPayload(schema: any, data: any) {
     return undefined;
   }
 
-  return;
+  return
 }
