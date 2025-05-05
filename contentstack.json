@@ -327,7 +327,7 @@
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries",
       "method": "POST",
-      "body": "entry_data",
+      "body": "entry",
       "queryParams": {
         "locale": "locale",
         "include_branch": "include_branch"
@@ -561,7 +561,7 @@
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
       "method": "PUT",
-      "body": "entry_data",
+      "body": "entry",
       "queryParams": {
         "locale": "locale",
         "include_branch": "include_branch"
@@ -1744,7 +1744,7 @@
     "mapper": {
       "apiUrl": "/v3/releases/release_id/items",
       "method": "POST",
-      "body": "item_data",
+      "body": "items",
       "params": {
         "release_id": "release_id"
       },
@@ -1828,7 +1828,7 @@
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
       "method": "PUT",
-      "body": "entry_data",
+      "body": "entry",
       "params": {
         "content_type_name": "content_type_name",
         "entry_id": "entry_id"
@@ -2531,7 +2531,7 @@
     "mapper": {
       "apiUrl": "/v3/releases/release_id/items",
       "method": "DELETE",
-      "body": "item_data",
+      "body": "items",
       "queryParams": {
         "include_branch": "include_branch",
         "all": "all"
