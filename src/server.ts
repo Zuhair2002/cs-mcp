@@ -15,14 +15,16 @@ import { buildContentstackRequest, getTools } from "./util.ts";
  * @returns An MCP server instance
  */
 
- type ApiVersionHeaders = "publish_variants_of_an_entry" | "publish_an_entry" | "unpublish_an_entry";
+type ApiVersionHeaders =
+  | "publish_variants_of_an_entry"
+  | "publish_an_entry"
+  | "unpublish_an_entry";
 
 const apiVersionHeaders: ApiVersionHeaders[] = [
   "publish_variants_of_an_entry",
   "publish_an_entry",
   "unpublish_an_entry",
 ];
-
 
 export function createContentstackMCPServer(options: {
   apiKey: string;
@@ -74,7 +76,7 @@ export function createContentstackMCPServer(options: {
       }
 
       // Build request configuration
-      let requestConfig:any = buildContentstackRequest(mapper, args);
+      let requestConfig: any = buildContentstackRequest(mapper, args);
 
       // Add authentication headers
       requestConfig.headers = {
@@ -83,7 +85,7 @@ export function createContentstackMCPServer(options: {
         authorization: managementToken,
       };
 
-      if(apiVersionHeaders.includes(name as ApiVersionHeaders)) {
+      if (apiVersionHeaders.includes(name as ApiVersionHeaders)) {
         requestConfig.headers["api_version"] = "3.2";
       }
 
@@ -91,7 +93,8 @@ export function createContentstackMCPServer(options: {
       try {
         response = await axios(requestConfig as AxiosRequestConfig);
       } catch (error) {
-        // console.error("API call failed:", error);
+        console.error("API call failed:", error.message);
+        throw new Error("API call failed: " + error.message);
       }
 
       // Return response in MCP format
