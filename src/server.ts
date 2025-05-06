@@ -33,6 +33,11 @@ export const GroupEnum: Record<string, GroupType> = {
   "Contentstack_Delivery": "contentstack_delivery"
 }
 
+const BASE_URLS = {
+  [GroupEnum.Contentstack]: "https://api.contentstack.io",
+  [GroupEnum.Contentstack_Delivery]: "https://cdn.contentstack.io"
+} as const;
+
 export function createContentstackMCPServer(options: {
   apiKey: string;
   managementToken: string;
@@ -95,32 +100,34 @@ export function createContentstackMCPServer(options: {
 
 
 
-      switch(toolGroup) {
+      switch (toolGroup) {
         case GroupEnum.Contentstack:
-          if(!managementToken) {
+          if (!managementToken) {
             throw new Error("Management token is required for Contentstack API");
           }
           requestConfig.headers = {
             ...requestConfig.headers,
             authorization: managementToken,
-          }
-          requestConfig.url = `https://api.contentstack.io${requestConfig.url}`;
+          };
+          requestConfig.url = `${BASE_URLS[GroupEnum.Contentstack]}${requestConfig.url}`;
           break;
+
         case GroupEnum.Contentstack_Delivery:
-          if(!deliveryToken) {
+          if (!deliveryToken) {
             throw new Error("Delivery token is required for Contentstack Delivery API");
           }
           requestConfig.headers = {
             ...requestConfig.headers,
             access_token: deliveryToken,
-          }
-          requestConfig.url = `https://cdn.contentstack.io${requestConfig.url}`;
+          };
+          requestConfig.url = `${BASE_URLS[GroupEnum.Contentstack_Delivery]}${requestConfig.url}`;
           break;
+
         default:
           throw new Error(`Unknown tool group: ${toolGroup}`);
       }
 
-      
+
 
       if (apiVersionHeaders.includes(name as ApiVersionHeaders)) {
         requestConfig.headers["api_version"] = "3.2";
@@ -129,7 +136,7 @@ export function createContentstackMCPServer(options: {
       let response;
       try {
         response = await axios(requestConfig as AxiosRequestConfig);
-      } catch (error:any) {
+      } catch (error: any) {
         console.error("API call failed:", error.response.data);
         throw new Error(
           "API call failed: " + JSON.stringify(error.response.data)
