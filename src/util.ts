@@ -37,9 +37,9 @@ export type ToolData = Record<string, Tool>;
 
 export const getTools = async () => {
   const contentstackUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/cda-tools/contentstack.json";
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/contentstack.json";
   const contentstackDeliveryUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/cda-tools/contentstack_delivery.json";
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/contentstack_delivery.json";
   const respsonse = await axios.all([
     axios.get(contentstackUrl),
     axios.get(contentstackDeliveryUrl),
