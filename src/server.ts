@@ -93,8 +93,10 @@ export function createContentstackMCPServer(options: {
       try {
         response = await axios(requestConfig as AxiosRequestConfig);
       } catch (error) {
-        console.error("API call failed:", error.message);
-        throw new Error("API call failed: " + error.message);
+        console.error("API call failed:", error.response.data);
+        throw new Error(
+          "API call failed: " + JSON.stringify(error.response.data)
+        );
       }
 
       // Return response in MCP format
