@@ -216,8 +216,7 @@
       "type": "object",
       "required": [
         "content_type_name",
-        "entry_id",
-        "environment"
+        "entry_id"
       ],
       "properties": {
         "branch": {
