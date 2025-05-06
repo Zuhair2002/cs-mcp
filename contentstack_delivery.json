@@ -236,7 +236,7 @@
         },
         "entry_id": {
           "type": "string",
-          "description": "Select an entry to fetch its details.",
+          "description": "Select an entry to fetch its details. If entry name is provided, then get all entries and filter the entry with the name.",
           "default": ""
         },
         "locale": {
