@@ -28,16 +28,26 @@ export interface Tool {
   description: string;
   mapper: ApiEndpointMapping;
   inputSchema: any;
+  group: string;
 }
 
 export type ToolData = Record<string, Tool>;
 
+
+
 export const getTools = async () => {
-  const fileUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/contentstack.json";
-  const respsonse = await axios.get(fileUrl);
+  const contentstackUrl =
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/cda-tools/contentstack.json";
+  const contentstackDeliveryUrl =
+    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/cda-tools/contentstack_delivery.json";
+  const respsonse = await axios.all([
+    axios.get(contentstackUrl),
+    axios.get(contentstackDeliveryUrl),
+  ]);
+
   return {
-    ...respsonse.data,
+    ...respsonse[0].data,
+    ...respsonse[1].data,
   };
 };
 
@@ -106,7 +116,7 @@ export function buildContentstackRequest(
 
   return {
     method: actionMapper.method,
-    url: `https://api.contentstack.io${url}`,
+    url: url,
     headers: {
       "Content-Type": "application/json",
     },

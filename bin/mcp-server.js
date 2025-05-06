@@ -24,9 +24,15 @@ async function initializeMCP() {
     process.env.CONTENTSTACK_API_KEY = process.argv[apiKey + 1];
   }
 
+    const deliveryToken = process.argv.findIndex((arg) => arg === "--delivery-token");
+    if (deliveryToken !== -1 && process.argv[deliveryToken + 1]) {
+      process.env.CONTENTSTACK_DELIVERY_TOKEN = process.argv[deliveryToken + 1];
+    }
+
   const server = createContentstackMCPServer({
     apiKey: process.env.CONTENTSTACK_API_KEY || "",
     managementToken: process.env.CONTENTSTACK_MANAGEMENT_TOKEN || "",
+    deliveryToken: process.env.CONTENTSTACK_DELIVERY_TOKEN || "",
   });
 
   const transport = new StdioServerTransport();

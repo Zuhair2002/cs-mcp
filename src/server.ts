@@ -26,11 +26,19 @@ const apiVersionHeaders: ApiVersionHeaders[] = [
   "unpublish_an_entry",
 ];
 
+export type GroupType = "contentstack" | "contentstack_delivery";
+
+export const GroupEnum: Record<string, GroupType> = {
+  "Contentstack": "contentstack",
+  "Contentstack_Delivery": "contentstack_delivery"
+}
+
 export function createContentstackMCPServer(options: {
   apiKey: string;
   managementToken: string;
+  deliveryToken: string;
 }) {
-  const { apiKey, managementToken } = options;
+  const { apiKey, managementToken, deliveryToken } = options;
 
   // Initialize server
   const server = new Server(
@@ -77,13 +85,42 @@ export function createContentstackMCPServer(options: {
 
       // Build request configuration
       let requestConfig: any = buildContentstackRequest(mapper, args);
+      const toolGroup = toolData[name].group;
 
       // Add authentication headers
       requestConfig.headers = {
         ...(requestConfig.headers as any),
         api_key: apiKey,
-        authorization: managementToken,
       };
+
+
+
+      switch(toolGroup) {
+        case GroupEnum.Contentstack:
+          if(!managementToken) {
+            throw new Error("Management token is required for Contentstack API");
+          }
+          requestConfig.headers = {
+            ...requestConfig.headers,
+            authorization: managementToken,
+          }
+          requestConfig.url = `https://api.contentstack.io${requestConfig.url}`;
+          break;
+        case GroupEnum.Contentstack_Delivery:
+          if(!deliveryToken) {
+            throw new Error("Delivery token is required for Contentstack Delivery API");
+          }
+          requestConfig.headers = {
+            ...requestConfig.headers,
+            access_token: deliveryToken,
+          }
+          requestConfig.url = `https://cdn.contentstack.io${requestConfig.url}`;
+          break;
+        default:
+          throw new Error(`Unknown tool group: ${toolGroup}`);
+      }
+
+      
 
       if (apiVersionHeaders.includes(name as ApiVersionHeaders)) {
         requestConfig.headers["api_version"] = "3.2";
