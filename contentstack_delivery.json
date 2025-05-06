@@ -83,8 +83,7 @@
     "inputSchema": {
       "type": "object",
       "required": [
-        "content_type_name",
-        "environment"
+        "content_type_name"
       ],
       "properties": {
         "branch": {
