@@ -1,0 +1,272 @@
+{
+  "get_all_assets": {
+    "name": "get_all_assets",
+    "description": "This tool retrieves metadata and publish details for all assets within a specified stack environment, supporting branch, locale, and version filters. Asset management, retrieval.",
+    "mapper": {
+      "apiUrl": "/v3/assets",
+      "method": "GET",
+      "queryParams": {
+        "version": "version",
+        "environment": "environment",
+        "locale": "locale",
+        "include_count": "include_count",
+        "include_publish_details": "include_publish_details",
+        "include_metadata": "include_metadata",
+        "include_branch": "include_branch",
+        "include_fallback": "include_fallback"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "environment"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "environment": {
+          "type": "string",
+          "description": "Select an environment to fetch the asset details published in that environment."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select a locale to fetch the asset details published in a particular locale."
+        },
+        "version": {
+          "type": "string",
+          "description": "Specify the asset version to be retrieved."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_fallback": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "get_all_entries": {
+    "name": "get_all_entries",
+    "description": "This tool retrieves all entries of a specified content type from a designated environment and branch within a Contentstack stack, supporting pagination via the limit parameter. Keywords: entries retrieval, content type.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries",
+      "method": "GET",
+      "params": {
+        "content_type_name": "content_type_name"
+      },
+      "queryParams": {
+        "environment": "environment",
+        "limit": "limit",
+        "skip": "skip",
+        "include_fallback": "include_fallback",
+        "include_count": "include_count",
+        "include_metadata": "include_metadata",
+        "include_publish_details": "include_publish_details",
+        "include_branch": "include_branch",
+        "locale": "locale",
+        "version": "version",
+        "query": "query",
+        "include[]": "include[]"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "content_type_name",
+        "environment"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Configure this option to fetch entries of a particular content type.",
+          "default": ""
+        },
+        "environment": {
+          "type": "string",
+          "description": "Select an environment to fetch the details of all the published entries.",
+          "default": ""
+        },
+        "limit": {
+          "type": "string",
+          "description": "Specify the number of entries to retrieve from the stack. For example, if you set the limit to 10, then 10 entries will be fetched. The maximum limit is 100."
+        },
+        "skip": {
+          "type": "string",
+          "description": "Specify the number of entries to skip. For example, if you set the skip value to 3, the first three entries will be skipped and the results will start with the fourth item."
+        },
+        "version": {
+          "type": "string",
+          "description": "Specify the entry version to be retrieved."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Specify the locale to fetch the localized entries."
+        },
+        "query": {
+          "type": "array",
+          "description": "Enter your data in key-value pairs to retrieve entries fulfilling the query specification."
+        },
+        "include": {
+          "type": "array",
+          "description": "Enter the value of the referenced entries within your entry data"
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_fallback": {
+          "type": "boolean"
+        },
+        "include_branch": {
+          "type": "boolean"
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "get_a_single_asset": {
+    "name": "get_a_single_asset",
+    "description": "This tool retrieves metadata and publish details for a specified asset from a designated environment and branch within the stack.",
+    "mapper": {
+      "apiUrl": "/v3/assets/asset_id",
+      "method": "GET",
+      "params": {
+        "asset_id": "asset_id"
+      },
+      "queryParams": {
+        "environment": "environment",
+        "include_publish_details": "include_publish_details",
+        "include_metadata": "include_metadata"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "environment",
+        "asset_id"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "environment": {
+          "type": "string",
+          "description": "Select an environment to fetch the asset details published in that environment."
+        },
+        "asset_id": {
+          "type": "string",
+          "description": "Select an asset to fetch its details."
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "get_a_single_entry": {
+    "name": "get_a_single_entry",
+    "description": "This tool retrieves the complete details of a single entry from a specified content type, environment, branch, and locale within a Contentstack stack. Suitable for content retrieval and entry inspection.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "GET",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      },
+      "queryParams": {
+        "environment": "environment",
+        "locale": "locale",
+        "include_publish_details": "include_publish_details",
+        "include_branch": "include_branch",
+        "include_metadata": "include_metadata",
+        "include_fallback": "include_fallback",
+        "include_all": "include_all_ref",
+        "include_all_depth": "include_all_dep",
+        "include[]": "include[]"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "content_type_name",
+        "entry_id",
+        "environment"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to fetch the entry details.",
+          "default": ""
+        },
+        "environment": {
+          "type": "string",
+          "description": "Select an environment to fetch the details of a published entry.",
+          "default": ""
+        },
+        "entry_id": {
+          "type": "string",
+          "description": "Select an entry to fetch its details.",
+          "default": ""
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select the locale to fetch the entry details present in that locale."
+        },
+        "include": {
+          "type": "array",
+          "description": "Enter the value of the referenced entries within your entry data"
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_fallback": {
+          "type": "boolean"
+        },
+        "include_branch": {
+          "type": "boolean"
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        },
+        "include_all_ref": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}
