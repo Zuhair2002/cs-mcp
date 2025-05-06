@@ -2,6 +2,7 @@
   "get_all_assets_cdn": {
     "name": "get_all_assets_cdn",
     "description": "Bulk asset retrieval—Returns CDN metadata for all publicly published assets in the specified environment (optional branch / locale), supporting version, publish‑details, and metadata filters.",
+    "group":"contentstack_delivery",
     "mapper": {
       "apiUrl": "/v3/assets",
       "method": "GET",
@@ -58,6 +59,7 @@
   },
   "get_all_entries_cdn": {
     "name": "get_all_entries_cdn",
+    "group": "contentstack_delivery",
     "description": "Bulk entry retrieval—Returns CDN‑delivered, published entries for the specified content type with optional environment with pagination, localization, query, and reference‑include controls.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries",
@@ -128,6 +130,7 @@
   },
   "get_a_single_asset_cdn": {
     "name": "get_a_single_asset_cdn",
+    "group": "contentstack_delivery",
     "description": "Single asset retrieval—Returns CDN metadata for a published asset UID in the specified environment, enabling deterministic delivery.",
     "mapper": {
       "apiUrl": "/v3/assets/asset_id",
@@ -159,6 +162,7 @@
   },
   "get_a_single_entry_cdn": {
     "name": "get_a_single_entry_cdn",
+    "group": "contentstack_delivery",
     "description": "Single entry retrieval—Returns CDN‑delivered data for a published entry UID of a content type with options of environment, with locale and reference‑include.",
     "mapper": {
       "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
