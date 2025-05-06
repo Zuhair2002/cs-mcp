@@ -96,7 +96,8 @@
           "description": "Schedule the entry publish in ‘YYYY-MM-DD HH:MM:SS’ format."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "unpublish_an_entry": {
     "name": "unpublish_an_entry",
@@ -191,7 +192,8 @@
           "description": "When left blank, the unpublish schedule is set to \"now.\" You may also enter a UTC time in \"YYYY-MM-DD HH:MM:SS\" format."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "publish_variants_of_an_entry": {
     "name": "publish_variants_of_an_entry",
@@ -319,7 +321,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "create_an_entry": {
     "name": "create_an_entry",
@@ -365,7 +368,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "delete_an_entry": {
     "name": "delete_an_entry",
@@ -412,7 +416,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_entries": {
     "name": "get_all_entries",
@@ -493,7 +498,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_single_entry": {
     "name": "get_single_entry",
@@ -553,7 +559,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "update_an_entry": {
     "name": "update_an_entry",
@@ -606,7 +613,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_content_types": {
     "name": "get_all_content_types",
@@ -658,7 +666,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_content_type": {
     "name": "get_a_single_content_type",
@@ -699,7 +708,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_taxonomies": {
     "name": "get_all_taxonomies",
@@ -755,7 +765,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_taxonomy": {
     "name": "get_a_single_taxonomy",
@@ -795,7 +806,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "export_a_taxonomy": {
     "name": "export_a_taxonomy",
@@ -826,7 +838,8 @@
           "default": "json"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_languages": {
     "name": "get_all_languages",
@@ -867,7 +880,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_branch_aliases": {
     "name": "get_all_branch_aliases",
@@ -893,7 +907,8 @@
           "description": "Specify the number of branch aliases to skip. For example, if you set the skip value to 3, the first three branch aliases will be skipped and the results will start with the fourth item."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_assets": {
     "name": "get_all_assets",
@@ -949,7 +964,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_branches": {
     "name": "get_all_branches",
@@ -975,7 +991,8 @@
           "description": "Specify the number of branches to skip. For example, if you set the skip value to 3, the first three branches will be skipped and the results will start with the fourth item."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_global_fields": {
     "name": "get_all_global_fields",
@@ -1003,7 +1020,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_items_in_a_release": {
     "name": "get_all_items_in_a_release",
@@ -1039,7 +1057,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_releases": {
     "name": "get_all_releases",
@@ -1087,7 +1106,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_terms": {
     "name": "get_all_terms",
@@ -1158,7 +1178,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_terms_across_all_taxonomies": {
     "name": "get_all_terms_across_all_taxonomies",
@@ -1206,7 +1227,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_variants_of_an_entry": {
     "name": "get_all_variants_of_an_entry",
@@ -1237,7 +1259,8 @@
           "default": ""
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_ancestors_of_a_term": {
     "name": "get_all_ancestors_of_a_term",
@@ -1293,7 +1316,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_asset": {
     "name": "get_a_single_asset",
@@ -1333,7 +1357,8 @@
           "description": "Enter the asset version to fetch its details."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_asset_reference": {
     "name": "get_asset_reference",
@@ -1361,7 +1386,8 @@
           "default": "main"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_branch": {
     "name": "get_a_single_branch",
@@ -1385,7 +1411,8 @@
           "default": ""
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_descendants_of_a_term": {
     "name": "get_all_descendants_of_a_term",
@@ -1451,7 +1478,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_release": {
     "name": "get_a_single_release",
@@ -1487,7 +1515,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_branch_alias": {
     "name": "get_a_single_branch_alias",
@@ -1511,7 +1540,8 @@
           "default": ""
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_single_entry_variant": {
     "name": "get_single_entry_variant",
@@ -1570,7 +1600,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_global_field": {
     "name": "get_a_single_global_field",
@@ -1606,7 +1637,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_variant": {
     "name": "get_a_single_variant",
@@ -1634,7 +1666,8 @@
           "description": "Select a variant to fetch its details."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_term": {
     "name": "get_a_single_term",
@@ -1675,7 +1708,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_variants_of_a_content_type": {
     "name": "get_all_variants_of_a_content_type",
@@ -1700,7 +1734,8 @@
           "default": ""
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_publish_queue": {
     "name": "get_publish_queue",
@@ -1736,7 +1771,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "add_items_to_a_release": {
     "name": "add_items_to_a_release",
@@ -1778,7 +1814,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "clone_a_release": {
     "name": "clone_a_release",
@@ -1820,7 +1857,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "localize_an_entry": {
     "name": "localize_an_entry",
@@ -1874,7 +1912,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "create_a_release": {
     "name": "create_a_release",
@@ -1905,7 +1944,8 @@
           "type": "boolean"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "create_a_taxonomy": {
     "name": "create_a_taxonomy",
@@ -1935,7 +1975,8 @@
           "description": "Specify a description for the taxonomy."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "create_a_term": {
     "name": "create_a_term",
@@ -1978,7 +2019,8 @@
           "description": "Select the parent to create a term, if this itself is root level then parent_uid is null."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "delete_an_asset": {
     "name": "delete_an_asset",
@@ -2006,7 +2048,8 @@
           "description": "Select an asset to delete."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "delete_a_taxonomy": {
     "name": "delete_a_taxonomy",
@@ -2037,7 +2080,8 @@
           "default": true
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "delete_a_term": {
     "name": "delete_a_term",
@@ -2074,7 +2118,8 @@
           "default": true
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_all_environments": {
     "name": "get_all_environments",
@@ -2108,7 +2153,8 @@
           "description": "Unique field UID to sort environments in descending order (e.g., \"updated_at\")."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "create_an_environment": {
     "name": "create_an_environment",
@@ -2153,7 +2199,8 @@
           }
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_an_environment": {
     "name": "get_an_environment",
@@ -2177,7 +2224,8 @@
           "description": "Exact name of the environment to fetch (lower-case letters, digits, hyphens, or underscores only)."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "update_an_environment": {
     "name": "update_an_environment",
@@ -2229,7 +2277,8 @@
           }
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "delete_an_environment": {
     "name": "delete_an_environment",
@@ -2253,7 +2302,8 @@
           "description": "Exact name of the environment to delete (lower-case letters, digits, hyphens, or underscores only)."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "deploy_a_release": {
     "name": "deploy_a_release",
@@ -2296,7 +2346,8 @@
           "default": "YYYY-MM-DDThh:mm:ss.sssZ"
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "get_a_single_merge_job": {
     "name": "get_a_single_merge_job",
@@ -2320,7 +2371,8 @@
           "default": ""
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "merge_branch": {
     "name": "merge_branch",
@@ -2422,7 +2474,8 @@
         }
       },
       "additionalProperties": false
-    }
+    },
+    "group": "contentstack"
   },
   "update_a_taxonomy": {
     "name": "update_a_taxonomy",
@@ -2456,7 +2509,8 @@
           "description": "Specify a description for the taxonomy."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "update_a_term": {
     "name": "update_a_term",
@@ -2491,7 +2545,8 @@
           "description": "Specify a title to update the term."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "delete_items_from_a_release": {
     "name": "delete_items_from_a_release",
@@ -2538,7 +2593,8 @@
           "default": false
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "publish_an_asset": {
     "name": "publish_an_asset",
@@ -2619,7 +2675,8 @@
           "description": "Schedule the asset publish in 'YYYY-MM-DD HH:MM:SS' format."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "unpublish_an_asset": {
     "name": "unpublish_an_asset",
@@ -2700,7 +2757,8 @@
           "description": "Schedule the asset publish in 'YYYY-MM-DD HH:MM:SS' format."
         }
       }
-    }
+    },
+    "group": "contentstack"
   },
   "unlocalize_an_entry": {
     "name": "unlocalize_an_entry",
@@ -2744,6 +2802,7 @@
           "description": "Select a locale (language) to remove the entry's localization in the selected locale. The entry must be localized in the selected locale."
         }
       }
-    }
+    },
+    "group": "contentstack"
   }
 }
