@@ -18,6 +18,11 @@ export interface ApiEndpointMapping {
   params?: Record<string, string>; // Maps URL param names to argument names
 }
 
+interface BuildResult {
+  value: any;
+  usedSource: boolean;
+}
+
 export interface Tool {
   name: string;
   description: string;
@@ -110,62 +115,71 @@ export function buildContentstackRequest(
   };
 }
 
-export function buildBodyPayload(schema: any, data: any) {
-  if (schema.type === "object") {
-    const result: any = {};
-    for (const key in schema.properties) {
-      const value = buildBodyPayload(schema.properties[key], data);
-      if (value !== undefined) {
-        result[key] = value;
-      }
-    }
-    return result;
-  }
+function buildBodyPayload(schema: any, data: any): any {
+  function walk(sch: any): BuildResult {
+    if (sch.type === "object") {
+      const obj: any = {};
+      let used = false;
 
-  if (schema.type === "array") {
-    if (schema.items.type === "object") {
-      const result: any = {};
-      for (const key in schema.items.properties) {
-        const value = buildBodyPayload(schema.items.properties[key], data);
-        if (value !== undefined) result[key] = value;
-      }
-
-      if (schema.optional && Object.keys(result).length === 0) {
-        return;
-      }
-      return result;
-    } else {
-      const sourceKey = schema["x-mapFrom"];
-      const value = data[sourceKey];
-      if (value !== undefined) {
-        if (Array.isArray(value)) {
-          return value;
-        } else {
-          return [value];
+      if (sch.properties) {
+        for (const k in sch.properties) {
+          if (!Object.prototype.hasOwnProperty.call(sch.properties, k))
+            continue;
+          const { value, usedSource } = walk(sch.properties[k]);
+          if (value !== undefined) {
+            obj[k] = value;
+            used ||= usedSource;
+          }
         }
       }
-      if ("default" in schema) return schema.default;
-      if (schema.optional) return undefined;
-      return [];
+
+      if (sch.optional && !used) return { value: undefined, usedSource: false };
+      return { value: obj, usedSource: used };
     }
-  }
 
-  const sourceKey = schema["x-mapFrom"];
-  if (sourceKey && data[sourceKey] !== undefined) {
-    if (Array.isArray(data[sourceKey])) {
-      let val = data[sourceKey][0];
-      return val;
+    if (sch.type === "array") {
+      if (sch.items?.type === "object") {
+        const { value: element, usedSource } = walk(sch.items);
+        const arr = usedSource ? [element] : [];
+        if (sch.optional && !usedSource)
+          return { value: undefined, usedSource: false };
+        return { value: arr, usedSource };
+      }
+
+      const mapKey = sch["x-mapFrom"];
+      const src = mapKey ? data[mapKey] : undefined;
+
+      if (src !== undefined) {
+        return {
+          value: Array.isArray(src) ? src : [src],
+          usedSource: true,
+        };
+      }
+
+      if (!sch.optional) {
+        if ("default" in sch) return { value: sch.default, usedSource: false };
+        return { value: [], usedSource: false };
+      }
+
+      return { value: undefined, usedSource: false };
     }
-    return data[sourceKey];
+
+    const mapKey = sch["x-mapFrom"];
+    if (mapKey && data[mapKey] !== undefined) {
+      const raw = data[mapKey];
+      return {
+        value: Array.isArray(raw) ? raw[0] : raw,
+        usedSource: true,
+      };
+    }
+
+    if (!sch.optional) {
+      if ("default" in sch) return { value: sch.default, usedSource: false };
+      return { value: undefined, usedSource: false };
+    }
+
+    return { value: undefined, usedSource: false };
   }
 
-  if ("default" in schema) {
-    return schema.default;
-  }
-
-  if (schema.optional) {
-    return undefined;
-  }
-
-  return;
+  return walk(schema).value;
 }

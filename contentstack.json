@@ -1,4 +1,326 @@
 {
+  "publish_an_entry": {
+    "name": "publish_an_entry",
+    "description": "This tool publishes a specified entry from a selected content type to one or more environments and locales within a designated branch of the stack. Content publishing, environments",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_uid/publish",
+      "method": "POST",
+      "body": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "type": "object",
+            "properties": {
+              "environments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "environment_uids"
+              },
+              "locales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "locales"
+              }
+            }
+          },
+          "locale": {
+            "type": "string",
+            "x-mapFrom": "master_locale"
+          },
+          "version": {
+            "type": "number",
+            "x-mapFrom": "version"
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time",
+            "optional": true,
+            "x-mapFrom": "scheduled_at"
+          }
+        }
+      },
+      "type": "complex",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_uid": "entry_uid"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "content_type_name",
+        "entry_uid",
+        "environment_uids",
+        "locales",
+        "master_locale"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to publish the entry.",
+          "default": ""
+        },
+        "entry_uid": {
+          "type": "string",
+          "description": "Select an entry's uid to publish.",
+          "default": ""
+        },
+        "locales": {
+          "type": "string",
+          "description": "Select the locale code(s) for publishing. For example, use 'en-us' for English (US) or 'ar' for Arabic. To view all available locale codes, use the get_all_languages tool first."
+        },
+        "master_locale": {
+          "type": "string",
+          "description": "Select the master locale in which you want to publish the entry. You can get this locale from the get_single_entry tool. There you can find the locale key. Call the get_single_entry tool to get the master locale."
+        },
+        "environment_uids": {
+          "type": "string",
+          "description": "Select the environment(s) in which you want to publish the entry.",
+          "default": ""
+        },
+        "publish_with_reference": {
+          "type": "boolean",
+          "default": true
+        },
+        "scheduled_at": {
+          "type": "string",
+          "description": "Schedule the entry publish in ‘YYYY-MM-DD HH:MM:SS’ format."
+        }
+      }
+    }
+  },
+  "unpublish_an_entry": {
+    "name": "unpublish_an_entry",
+    "description": "This tool unpublishes a specified entry from selected environments and locales within a Contentstack stack branch, removing the entry from the CDN and making it inaccessible via delivery APIs. Keywords: unpublish, entry",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry/unpublish",
+      "method": "POST",
+      "body": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "type": "object",
+            "properties": {
+              "environments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "environment_uids"
+              },
+              "locales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "locales"
+              }
+            }
+          },
+          "locale": {
+            "type": "string",
+            "x-mapFrom": "master_locale"
+          },
+          "version": {
+            "type": "number",
+            "x-mapFrom": "version"
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time",
+            "optional": true,
+            "x-mapFrom": "scheduled_at"
+          }
+        }
+      },
+      "type": "complex",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry": "entry"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "content_type_name",
+        "entry",
+        "environment_uids",
+        "locales",
+        "master_locale"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to unpublish the entry.",
+          "default": ""
+        },
+        "entry": {
+          "type": "string",
+          "description": "Select an entry to unpublish.",
+          "default": ""
+        },
+        "environment_uids": {
+          "type": "string",
+          "description": "Select the environment(s) from where you want to unpublish the entry.",
+          "default": ""
+        },
+        "locales": {
+          "type": "string",
+          "description": "Select the locale code(s) for publishing. For example, use 'en-us' for English (US) or 'ar' for Arabic. To view all available locale codes, use the get_all_languages tool first."
+        },
+        "master_locale": {
+          "type": "string",
+          "description": "Select the master locale in which you want to publish the entry. You can get this locale from the get_single_entry tool. There you can find the locale key. Call the get_single_entry tool to get the master locale."
+        },
+        "scheduled_at": {
+          "type": "string",
+          "description": "When left blank, the unpublish schedule is set to \"now.\" You may also enter a UTC time in \"YYYY-MM-DD HH:MM:SS\" format."
+        }
+      }
+    }
+  },
+  "publish_variants_of_an_entry": {
+    "name": "publish_variants_of_an_entry",
+    "description": "This tool publishes specified entry variants to selected environments and locales within a defined branch, supporting variant group targeting for content type entries. Keywords: publish, variants",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry/publish",
+      "method": "POST",
+      "body": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "type": "object",
+            "properties": {
+              "environments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "environment_uids"
+              },
+              "locales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "x-mapFrom": "locales"
+              },
+              "variants": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "uid": {
+                      "type": "string",
+                      "x-mapFrom": "variant_ids"
+                    }
+                  }
+                }
+              },
+              "variant_rules": {
+                "type": "object",
+                "properties": {
+                  "publish_latest_base": {
+                    "type": "boolean",
+                    "x-mapFrom": "publish_latest_base",
+                    "default": false
+                  },
+                  "publish_latest_base_conditionally": {
+                    "type": "boolean",
+                    "x-mapFrom": "publish_latest_base_conditionally",
+                    "default": true
+                  }
+                }
+              }
+            }
+          },
+          "locale": {
+            "type": "string",
+            "x-mapFrom": "locales"
+          }
+        }
+      },
+      "type": "complex",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry": "entry"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": [
+        "content_type_name",
+        "entry",
+        "environment_uids",
+        "locales",
+        "variant_ids"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "content_type_name": {
+          "type": "string",
+          "description": "Select a content type to publish the entry’s variant.",
+          "default": ""
+        },
+        "entry": {
+          "type": "string",
+          "description": "Select an entry to publish its variant.",
+          "default": ""
+        },
+        "variant_group_uid": {
+          "type": "string",
+          "description": "Select the Variant Group to publish the variant."
+        },
+        "variant_ids": {
+          "type": "string",
+          "description": "Select the variant(s) to publish its content. You can select multiple variants. If variant name is provided then get the variant id by calling the get_all_variants_of_a_content_type tool and then match the variant name with the id."
+        },
+        "locales": {
+          "type": "string",
+          "description": "Select the locale code(s) for publishing. For example, use 'en-us' for English (US) or 'ar' for Arabic. To view all available locale codes, use the get_all_languages tool first."
+        },
+        "environment_uids": {
+          "type": "string",
+          "description": "Select the environment(s) in which you want to publish the entry’s variant. You can select multiple environments. You can get the environment uid from the get_all_environments tool. There you can find the uid key. Call the get_all_environments tool to get the environment uid.",
+          "default": ""
+        },
+        "scheduled_at": {
+          "type": "string",
+          "description": "Schedule the publish schedule in ‘YYYY-MM-DD HH:MM:SS’ format."
+        },
+        "publish_with_reference": {
+          "type": "boolean",
+          "default": true
+        },
+        "publish_latest_base": {
+          "type": "boolean",
+          "default": false
+        },
+        "publish_latest_base_conditionally": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
   "create_an_entry": {
     "name": "create_an_entry",
     "description": "This tool creates a new entry in the specified Contentstack stack, targeting a defined content type and branch, with support for locale selection and structured entry data.",
@@ -2015,38 +2337,6 @@
             "type": "array",
             "x-mapFrom": "item_merge_strategies",
             "optional": true,
-            "items": {
-              "type": "object",
-              "required": [
-                "uid",
-                "type",
-                "merge_strategy"
-              ],
-              "properties": {
-                "uid": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "content_type",
-                    "global_field"
-                  ]
-                },
-                "merge_strategy": {
-                  "type": "string",
-                  "enum": [
-                    "merge_prefer_base",
-                    "merge_prefer_compare",
-                    "overwrite_with_compare",
-                    "merge_new_only",
-                    "merge_modified_only_prefer_base",
-                    "merge_modified_only_prefer_compare"
-                  ]
-                }
-              },
-              "additionalProperties": false
-            },
             "minItems": 1
           }
         },
