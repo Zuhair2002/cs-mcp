@@ -102,7 +102,7 @@ export function createContentstackMCPServer(options: {
 
       switch (toolGroup) {
         case GroupEnum.Contentstack:
-          if (!managementToken) {
+          if (!managementToken || !managementToken.trim().length) {
             throw new Error("Management token is required for Contentstack API");
           }
           requestConfig.headers = {
@@ -113,7 +113,7 @@ export function createContentstackMCPServer(options: {
           break;
 
         case GroupEnum.Contentstack_Delivery:
-          if (!deliveryToken) {
+          if (!deliveryToken || !deliveryToken.trim().length) {
             throw new Error("Delivery token is required for Contentstack Delivery API");
           }
           requestConfig.headers = {
