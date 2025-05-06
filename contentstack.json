@@ -2337,38 +2337,6 @@
             "type": "array",
             "x-mapFrom": "item_merge_strategies",
             "optional": true,
-            "items": {
-              "type": "object",
-              "required": [
-                "uid",
-                "type",
-                "merge_strategy"
-              ],
-              "properties": {
-                "uid": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "content_type",
-                    "global_field"
-                  ]
-                },
-                "merge_strategy": {
-                  "type": "string",
-                  "enum": [
-                    "merge_prefer_base",
-                    "merge_prefer_compare",
-                    "overwrite_with_compare",
-                    "merge_new_only",
-                    "merge_modified_only_prefer_base",
-                    "merge_modified_only_prefer_compare"
-                  ]
-                }
-              },
-              "additionalProperties": false
-            },
             "minItems": 1
           }
         },
