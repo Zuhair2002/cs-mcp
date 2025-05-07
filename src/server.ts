@@ -26,24 +26,17 @@ const apiVersionHeaders: ApiVersionHeaders[] = [
   "unpublish_an_entry",
 ];
 
-export type GroupType = "contentstack" | "contentstack_delivery";
+export type GroupType = "contentstack" | "contentstack_delivery" | "all";
 
-export const GroupEnum: Record<string, GroupType> = {
-  "Contentstack": "contentstack",
-  "Contentstack_Delivery": "contentstack_delivery"
-}
 
-const BASE_URLS = {
-  [GroupEnum.Contentstack]: "https://api.contentstack.io",
-  [GroupEnum.Contentstack_Delivery]: "https://cdn.contentstack.io"
-} as const;
 
 export function createContentstackMCPServer(options: {
   apiKey: string;
   managementToken: string;
   deliveryToken: string;
+  group: GroupType;
 }) {
-  const { apiKey, managementToken, deliveryToken } = options;
+  const { apiKey, managementToken, deliveryToken, group } = options;
 
   // Initialize server
   const server = new Server(
@@ -62,14 +55,18 @@ export function createContentstackMCPServer(options: {
 
   // Load tools and handle ListTools requests
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    toolData = await getTools();
     try {
+      toolData = await getTools(group);
+
+      if (!toolData) {
+        throw new Error("No tools data received");
+      }
+
       return {
         tools: Object.values(toolData),
       };
     } catch (error) {
-      //   console.error("Failed to load tools:", error);
-      throw new Error("Failed to load tools");
+      throw new Error("Failed to load tools: " + (error instanceof Error ? error.message : "Unknown error"));
     }
   });
 
@@ -87,47 +84,9 @@ export function createContentstackMCPServer(options: {
       if (!mapper) {
         throw new Error(`Unknown tool: ${name}`);
       }
-
+      const groupName = toolData[name].group;
       // Build request configuration
-      let requestConfig: any = buildContentstackRequest(mapper, args);
-      const toolGroup = toolData[name].group;
-
-      // Add authentication headers
-      requestConfig.headers = {
-        ...(requestConfig.headers as any),
-        api_key: apiKey,
-      };
-
-
-
-      switch (toolGroup) {
-        case GroupEnum.Contentstack:
-          if (!managementToken || !managementToken.trim().length) {
-            throw new Error("Management token is required for Contentstack API");
-          }
-          requestConfig.headers = {
-            ...requestConfig.headers,
-            authorization: managementToken,
-          };
-          requestConfig.url = `${BASE_URLS[GroupEnum.Contentstack]}${requestConfig.url}`;
-          break;
-
-        case GroupEnum.Contentstack_Delivery:
-          if (!deliveryToken || !deliveryToken.trim().length) {
-            throw new Error("Delivery token is required for Contentstack Delivery API");
-          }
-          requestConfig.headers = {
-            ...requestConfig.headers,
-            access_token: deliveryToken,
-          };
-          requestConfig.url = `${BASE_URLS[GroupEnum.Contentstack_Delivery]}${requestConfig.url}`;
-          break;
-
-        default:
-          throw new Error(`Unknown tool group: ${toolGroup}`);
-      }
-
-
+      let requestConfig: any = buildContentstackRequest(mapper, args, groupName, options);
 
       if (apiVersionHeaders.includes(name as ApiVersionHeaders)) {
         requestConfig.headers["api_version"] = "3.2";

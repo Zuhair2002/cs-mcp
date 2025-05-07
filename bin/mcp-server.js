@@ -7,32 +7,66 @@ import { createContentstackMCPServer } from "../dist/bundle.cjs";
 // Load environment variables
 dotenv.config();
 
-/**
- * Initialize the MCP server for use with Claude desktop
- */
+const TOKEN_ARGS = {
+  MANAGEMENT: "--management-token",
+  DELIVERY: "--delivery-token",
+  API_KEY: "--stack-api-key",
+};
+
+const GROUPS = {
+  ALL: "all",
+  CONTENTSTACK: "contentstack",
+  DELIVERY: "contentstack_delivery",
+};
+
+
+function getArgValue(argName) {
+  const index = process.argv.findIndex((arg) => arg === argName);
+  return index !== -1 ? process.argv[index + 1] : null;
+}
+
+function determineGroup(managementToken, deliveryToken) {
+  if (managementToken?.trim() && deliveryToken?.trim()) {
+    return GROUPS.ALL;
+  }
+  if (managementToken?.trim()) {
+    return GROUPS.CONTENTSTACK;
+  }
+  if (deliveryToken?.trim()) {
+    return GROUPS.DELIVERY;
+  }
+  return null;
+}
+
 async function initializeMCP() {
-  const managementToken = process.argv.findIndex(
-    (arg) => arg === "--management-token"
+  const managementToken = getArgValue(TOKEN_ARGS.MANAGEMENT);
+  const apiKey = getArgValue(TOKEN_ARGS.API_KEY);
+  const deliveryToken = getArgValue(TOKEN_ARGS.DELIVERY);
+
+  if (managementToken) {
+    process.env.CONTENTSTACK_MANAGEMENT_TOKEN = managementToken;
+  }
+  if (apiKey) {
+    process.env.CONTENTSTACK_API_KEY = apiKey;
+  }
+  if (deliveryToken) {
+    process.env.CONTENTSTACK_DELIVERY_TOKEN = deliveryToken;
+  }
+
+  if (!process.env.CONTENTSTACK_API_KEY && !apiKey) {
+    throw new Error("Please provide the Contentstack API key");
+  }
+
+  const group = determineGroup(
+    process.env.CONTENTSTACK_MANAGEMENT_TOKEN,
+    process.env.CONTENTSTACK_DELIVERY_TOKEN
   );
-  if (managementToken !== -1 && process.argv[managementToken + 1]) {
-    process.env.CONTENTSTACK_MANAGEMENT_TOKEN =
-      process.argv[managementToken + 1];
-  }
-
-  const apiKey = process.argv.findIndex((arg) => arg === "--stack-api-key");
-  if (apiKey !== -1 && process.argv[apiKey + 1]) {
-    process.env.CONTENTSTACK_API_KEY = process.argv[apiKey + 1];
-  }
-
-    const deliveryToken = process.argv.findIndex((arg) => arg === "--delivery-token");
-    if (deliveryToken !== -1 && process.argv[deliveryToken + 1]) {
-      process.env.CONTENTSTACK_DELIVERY_TOKEN = process.argv[deliveryToken + 1];
-    }
 
   const server = createContentstackMCPServer({
     apiKey: process.env.CONTENTSTACK_API_KEY || "",
     managementToken: process.env.CONTENTSTACK_MANAGEMENT_TOKEN || "",
     deliveryToken: process.env.CONTENTSTACK_DELIVERY_TOKEN || "",
+    group: group,
   });
 
   const transport = new StdioServerTransport();

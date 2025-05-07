@@ -3,7 +3,8 @@
  * MCP tools and Contentstack API endpoints
  */
 
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
+import { GroupType } from "./server.ts";
 
 /**
  * Interface for API endpoint mapping
@@ -33,22 +34,51 @@ export interface Tool {
 
 export type ToolData = Record<string, Tool>;
 
+export const GroupEnum: Record<string, GroupType> = {
+  "Contentstack": "contentstack",
+  "Delivery": "contentstack_delivery",
+  "All": "all"
+}
+
+const BASE_URLS = {
+  [GroupEnum.Contentstack]: "https://api.contentstack.io",
+  [GroupEnum.Delivery]: "https://cdn.contentstack.io"
+} as const;
+
+const URLS = {
+  contentstack: "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/cda-tools/contentstack.json",
+  contentstack_delivery: "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/cda-tools/contentstack_delivery.json"
+} as const;
 
 
-export const getTools = async () => {
-  const contentstackUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/contentstack.json";
-  const contentstackDeliveryUrl =
-    "https://raw.githubusercontent.com/Zuhair2002/cs-mcp/refs/heads/main/contentstack_delivery.json";
-  const respsonse = await axios.all([
-    axios.get(contentstackUrl),
-    axios.get(contentstackDeliveryUrl),
-  ]);
 
-  return {
-    ...respsonse[0].data,
-    ...respsonse[1].data,
-  };
+export const getTools = async (group: GroupType) => {
+  try {
+    switch (group) {
+      case "contentstack": {
+        const response = await axios.get(URLS.contentstack);
+        return { ...response.data };
+      }
+      case "contentstack_delivery": {
+        const response = await axios.get(URLS.contentstack_delivery);
+        return { ...response.data };
+      }
+      case "all": {
+        const [contentstackRes, deliveryRes] = await Promise.all([
+          axios.get(URLS.contentstack),
+          axios.get(URLS.contentstack_delivery)
+        ]);
+        return {
+          ...contentstackRes.data,
+          ...deliveryRes.data
+        };
+      }
+      default:
+        throw new Error(`Invalid group: ${group}`);
+    }
+  } catch (error) {
+    throw new Error(`Failed to fetch tools for group ${group}`);
+  }
 };
 
 /**
@@ -59,7 +89,14 @@ export const getTools = async () => {
  */
 export function buildContentstackRequest(
   actionMapper: ApiEndpointMapping,
-  args: Record<string, any>
+  args: Record<string, any>,
+  groupName: string,
+  options: {
+    apiKey: string;
+    managementToken: string;
+    deliveryToken: string;
+    group: GroupType;
+  }
 ) {
   if (!actionMapper) {
     throw new Error(`Unknown action`);
@@ -114,15 +151,16 @@ export function buildContentstackRequest(
     }
   }
 
-  return {
-    method: actionMapper.method,
-    url: url,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: body,
-    params: Object.keys(queryParams).length ? queryParams : undefined,
-  };
+  const returnObj = buildReturnValue(
+    groupName,
+    actionMapper.method,
+    url,
+    body,
+    queryParams,
+    options
+  );
+
+  return returnObj;
 }
 
 function buildBodyPayload(schema: any, data: any): any {
@@ -192,4 +230,71 @@ function buildBodyPayload(schema: any, data: any): any {
   }
 
   return walk(schema).value;
+}
+
+
+
+export function buildReturnValue(
+  groupName: string,
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  url: string,
+  data: any,
+  queryParams: any,
+  options: {
+    apiKey: string;
+    managementToken: string;
+    deliveryToken: string;
+    group: GroupType;
+  }
+): AxiosRequestConfig {
+  if (!url) {
+    throw new Error('URL is required');
+  }
+
+  const { apiKey, managementToken, deliveryToken, group } = options;
+  const baseUrl = BASE_URLS[groupName];
+
+  if (!baseUrl) {
+    throw new Error(`Invalid group: ${group}`);
+  }
+
+  const fullUrl = `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
+
+  const config: AxiosRequestConfig = {
+    method,
+    url: fullUrl,
+    data: data || undefined,
+    params: Object.keys(queryParams || {}).length > 0 ? queryParams : undefined,
+    headers: {
+      "Content-Type": "application/json",
+      "api_key": apiKey,
+    },
+  };
+
+  switch (groupName) {
+    case GroupEnum.Contentstack:
+      if (!managementToken) {
+        throw new Error('Management token is required for Contentstack API');
+      }
+      config.headers = {
+        ...config.headers,
+        authorization: managementToken,
+      };
+      break;
+
+    case GroupEnum.Delivery:
+      if (!deliveryToken) {
+        throw new Error('Delivery token is required for Delivery API');
+      }
+      config.headers = {
+        ...config.headers,
+        access_token: deliveryToken,
+      };
+      break;
+
+    default:
+      throw new Error(`Unknown tool group: ${group}`);
+  }
+
+  return config;
 }
