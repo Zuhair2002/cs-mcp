@@ -1,0 +1,41 @@
+{
+  "name": "@zuhair-cs/cs-mcp",
+  "version": "0.0.7",
+  "main": "./dist/bundle.js",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "contentstack-mcp-server": "./bin/contentstack-mcp.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node build.js && chmod +x bin/contentstack-mcp.js",
+    "clean": "rm -rf dist",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "dev": "nodemon --watch src -e ts --exec 'npm run build'",
+    "prettier": "prettier src --check",
+    "prettier:fix": "prettier src --write",
+    "format": "npm run prettier:fix && npm run lint:fix"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0",
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "esbuild": "^0.25.3",
+    "eslint": "^9.26.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0"
+  }
+}

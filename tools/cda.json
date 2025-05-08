@@ -1,0 +1,207 @@
+{
+  "get_all_assets_cdn": {
+    "name": "get_all_assets_cdn",
+    "description": "Bulk asset retrieval—Returns CDN metadata for all publicly published assets in the specified environment (optional branch / locale), supporting version, publish‑details, and metadata filters.",
+    "group": "cda",
+    "mapper": {
+      "apiUrl": "/v3/assets",
+      "method": "GET",
+      "queryParams": {
+        "version": "version",
+        "environment": "environment",
+        "locale": "locale",
+        "include_count": "include_count",
+        "include_publish_details": "include_publish_details",
+        "include_metadata": "include_metadata",
+        "include_branch": "include_branch",
+        "include_fallback": "include_fallback"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["environment"],
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Select a branch from your stack.",
+          "default": "main"
+        },
+        "environment": {
+          "type": "string",
+          "description": "Select an environment to fetch the asset details published in that environment."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Select a locale to fetch the asset details published in a particular locale."
+        },
+        "version": {
+          "type": "string",
+          "description": "Specify the asset version to be retrieved."
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_publish_details": {
+          "type": "boolean"
+        },
+        "include_metadata": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_fallback": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "get_all_entries_cdn": {
+    "name": "get_all_entries_cdn",
+    "group": "cda",
+    "description": "Bulk entry retrieval—Returns CDN‑delivered, published entries for the specified content type with optional environment with pagination, localization, query, and reference‑include controls.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries",
+      "method": "GET",
+      "params": {
+        "content_type_name": "content_type_name"
+      },
+      "queryParams": {
+        "environment": "environment",
+        "limit": "limit",
+        "skip": "skip",
+        "include_fallback": "include_fallback",
+        "include_count": "include_count",
+        "locale": "locale",
+        "query": "query",
+        "include[]": "include[]"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name"],
+      "properties": {
+        "content_type_name": {
+          "type": "string",
+          "description": "Specify the content type uid to fetch entries from. If content type name is provided, fetch all entries and then filter by name."
+        },
+        "environment": {
+          "type": "string",
+          "description": "Specify the environment name to fetch published entries from"
+        },
+        "limit": {
+          "type": "number",
+          "description": "Number of entries to retrieve (max: 100)",
+          "default": 100
+        },
+        "skip": {
+          "type": "number",
+          "description": "Number of entries to skip for pagination",
+          "default": 0
+        },
+        "locale": {
+          "type": "string",
+          "description": "Specify the locale to fetch localized entries",
+          "default": "en-us"
+        },
+        "query": {
+          "type": "object",
+          "description": "Query parameters to filter entries"
+        },
+        "include": {
+          "type": "array",
+          "description": "Referenced fields to include in the response"
+        },
+        "include_count": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include total count of entries in response"
+        },
+        "include_fallback": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include fallback locale content if specified locale not available"
+        }
+      }
+    }
+  },
+  "get_a_single_asset_cdn": {
+    "name": "get_a_single_asset_cdn",
+    "group": "cda",
+    "description": "Single asset retrieval—Returns CDN metadata for a published asset UID in the specified environment, enabling deterministic delivery.",
+    "mapper": {
+      "apiUrl": "/v3/assets/asset_id",
+      "method": "GET",
+      "params": {
+        "asset_id": "asset_id"
+      },
+      "queryParams": {
+        "environment": "environment"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["environment", "asset_id"],
+      "properties": {
+        "environment": {
+          "type": "string",
+          "description": "Specify the environment name to fetch the published asset from"
+        },
+        "asset_id": {
+          "type": "string",
+          "description": "Specify the asset uid to fetch its details. If asset name is provided, fetch all assets and then filter by name."
+        }
+      }
+    }
+  },
+  "get_a_single_entry_cdn": {
+    "name": "get_a_single_entry_cdn",
+    "group": "cda",
+    "description": "Single entry retrieval—Returns CDN‑delivered data for a published entry UID of a content type with options of environment, with locale and reference‑include.",
+    "mapper": {
+      "apiUrl": "/v3/content_types/content_type_name/entries/entry_id",
+      "method": "GET",
+      "params": {
+        "content_type_name": "content_type_name",
+        "entry_id": "entry_id"
+      },
+      "queryParams": {
+        "environment": "environment",
+        "locale": "locale",
+        "include_fallback": "include_fallback",
+        "include[]": "include[]"
+      }
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["content_type_name", "entry_id"],
+      "properties": {
+        "content_type_name": {
+          "type": "string",
+          "description": "Specify the content type uid to fetch the entry from"
+        },
+        "entry_id": {
+          "type": "string",
+          "description": "Specify the entry uid to fetch its details. If entry name is provided, fetch all entries and then filter by name."
+        },
+        "environment": {
+          "type": "string",
+          "description": "Specify the environment name to fetch the published entry from"
+        },
+        "locale": {
+          "type": "string",
+          "description": "Specify the locale to fetch localized entry",
+          "default": "en-us"
+        },
+        "include": {
+          "type": "array",
+          "description": "Referenced fields to include in the response"
+        },
+        "include_fallback": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include fallback locale content if specified locale not available"
+        }
+      }
+    }
+  }
+}
