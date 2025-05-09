@@ -28,10 +28,6 @@
   "author": "",
   "license": "MIT",
   "description": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ZuhairAhmed-cs/cs-mcp.git"
-  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.0",
     "axios": "^1.9.0",
