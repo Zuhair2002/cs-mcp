@@ -1,0 +1,19 @@
+fileignoreconfig:
+  - filename: .github/workflows/secrets-scan.yml
+    ignore_detectors:
+      - filecontent
+  - filename: package-lock.json
+    ignore_detectors:
+      - filecontent
+  - filename: README.md
+    ignore_detectors:
+      - filecontent
+  - filename: src/__tests__/cda.spec.ts
+    ignore_detectors:
+      - filecontent
+  - filename: src/__tests__/cma.spec.ts
+    ignore_detectors:
+      - filecontent
+  - filename: src/utils/constants.ts
+    checksum: ed220d1ea0561ac7ceb3bbc9410a281f65e271754a0b2b2b3b1ab32b897a82aa
+version: "1.0"

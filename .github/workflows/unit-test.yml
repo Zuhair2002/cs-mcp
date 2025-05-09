@@ -1,0 +1,35 @@
+name: "Unit test coverage"
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install Node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "21.x"
+
+      - name: "Install deps"
+        run: npm ci       
+
+      - name: "Run Jest + coverage"
+        run: npm test    
+
+      - name: "Report coverage"
+        if: always()
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          lcov-file: coverage/lcov.info
+          title: "Jest coverage report"
+          
