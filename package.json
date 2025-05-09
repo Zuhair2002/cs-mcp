@@ -1,6 +1,6 @@
 {
   "name": "@zuhair-cs/cs-mcp",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "./dist/bundle.js",
   "type": "module",
   "publishConfig": {
@@ -29,9 +29,9 @@
   "license": "MIT",
   "description": "",
   "repository": {
-        "type": "git",
-        "url": "https://github.com/ZuhairAhmed-cs/cs-mcp.git"
-    },
+    "type": "git",
+    "url": "https://github.com/ZuhairAhmed-cs/cs-mcp.git"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.0",
     "axios": "^1.9.0",
